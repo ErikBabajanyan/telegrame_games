@@ -36,6 +36,8 @@ const envSchema = z.object({
   METRICS_ENABLED: z.coerce.boolean().default(true),
 });
 
+type EnvConfig = z.infer<typeof envSchema>;
+
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
@@ -44,4 +46,4 @@ if (!parsed.success) {
   process.exit(1);
 }
 
-export const config = parsed.data;
+export const config: EnvConfig = parsed.data;
