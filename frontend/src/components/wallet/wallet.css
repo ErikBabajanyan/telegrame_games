@@ -1,0 +1,69 @@
+/* ═══ Balance Pill ═══ */
+.balance-pill {
+  background: var(--c-blue-glow);
+  border: 1px solid rgba(0, 136, 255, 0.2);
+  border-radius: var(--r-md);
+  padding: 6px clamp(8px, 2vw, 14px);
+  font-size: clamp(11px, 3vw, 13px);
+  color: var(--c-blue);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ═══ Connect Wallet ═══ */
+.wallet-connected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-3);
+}
+.wallet-info { display: flex; flex-direction: column; gap: 2px; }
+.wallet-status { font-size: 11px; color: var(--c-green); font-weight: 600; }
+.wallet-name { font-size: 13px; color: #fff; font-weight: 600; }
+.wallet-addr { font-size: 10px; color: var(--c-text-muted); font-family: monospace; word-break: break-all; }
+
+/* ═══ Forms ═══ */
+.deposit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.form-label {
+  font-size: 11px;
+  color: var(--c-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-input {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  padding: var(--s-3) var(--s-4);
+  font-size: 15px;
+  color: #fff;
+  outline: none;
+  width: 100%;
+  height: var(--touch-min);
+}
+.form-input:focus {
+  border-color: rgba(0, 136, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.08);
+}
+.form-error { color: var(--c-red); font-size: 12px; font-weight: 500; }
+.form-hint { color: var(--c-text-muted); font-size: 11px; }
+.quick-amounts { display: flex; gap: var(--s-2); }
+.quick-btn {
+  flex: 1;
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  padding: var(--s-2);
+  font-size: 11px;
+  color: var(--c-text-muted);
+  font-weight: 600;
+  min-height: 36px;
+}
+.quick-btn:active { border-color: var(--c-blue); color: var(--c-blue); }
+.withdraw-info { font-size: 13px; color: var(--c-text); line-height: 1.6; }
+.withdraw-to { font-size: 11px; color: var(--c-text-muted); word-break: break-all; }

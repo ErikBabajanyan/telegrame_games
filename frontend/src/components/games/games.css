@@ -1,0 +1,425 @@
+/* ══════════════════════════════════════
+   MINES GAME — Responsive Design
+   Tested: 320px–480px, all iPhone/Android
+   ══════════════════════════════════════ */
+
+/* ═══ Board ═══ */
+.board-v2-wrapper {
+  width: 100%;
+  padding: var(--s-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.board-v2-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(5px, 1.5vw, 8px);
+  width: 100%;
+  max-width: min(420px, calc(100vw - 24px));
+}
+
+/* ═══ Cell ═══ */
+.cell-v2 {
+  aspect-ratio: 1;
+  border-radius: clamp(8px, 2.5vw, 12px);
+  border: 1.5px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  position: relative;
+  /* NO overflow:hidden — lets scaled icons breathe during animation */
+}
+.cell-v2:disabled { cursor: default; }
+
+/* Inner container — explicit sizing via inset positioning */
+.cell-v2-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── SVG Icons ─── */
+.cell-icon {
+  width: 50%;
+  height: 50%;
+  display: block;
+  flex-shrink: 0;
+}
+/* Gem icon glow */
+.cell-icon-gem {
+  filter: drop-shadow(0 0 6px rgba(45, 212, 191, 0.5));
+}
+/* Mine icon */
+.cell-icon-mine {
+  filter: drop-shadow(0 0 6px rgba(255, 107, 107, 0.5));
+}
+
+/* ─── Reveal animation containers ─── */
+.cell-v2-reveal-gem {
+  animation: gemGlow 1.5s ease infinite alternate;
+}
+.cell-v2-reveal-mine {
+  animation: mineShake 0.3s ease;
+}
+
+@keyframes gemGlow {
+  from { filter: brightness(1); }
+  to   { filter: brightness(1.15); }
+}
+@keyframes mineShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+}
+
+/* ─── Cell States ─── */
+.cell-v2-hidden {
+  background: linear-gradient(145deg, #1b2d4a, #132240);
+  border-color: var(--c-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+.cell-v2-hidden:not(:disabled):active {
+  background: linear-gradient(145deg, #162542, #0f1d38);
+  border-color: rgba(0, 136, 255, 0.4);
+}
+
+.cell-v2-loading {
+  background: linear-gradient(145deg, #1b2d4a, #132240);
+  border-color: rgba(0, 136, 255, 0.3);
+}
+
+.cell-v2-gem {
+  background: linear-gradient(145deg, #072e20, #0a4030);
+  border-color: rgba(0, 200, 136, 0.5);
+  box-shadow:
+    0 0 clamp(10px, 3vw, 18px) rgba(0, 200, 136, 0.25),
+    inset 0 0 clamp(8px, 2vw, 14px) rgba(0, 200, 136, 0.08);
+}
+
+.cell-v2-mine {
+  background: linear-gradient(145deg, #3a0808, #520e0e);
+  border-color: rgba(255, 107, 107, 0.5);
+  box-shadow:
+    0 0 clamp(10px, 3vw, 18px) rgba(255, 107, 107, 0.3),
+    inset 0 0 clamp(8px, 2vw, 14px) rgba(255, 68, 68, 0.1);
+}
+
+/* ─── Hidden state dot ─── */
+.cell-v2-dot {
+  width: clamp(6px, 2vw, 10px);
+  height: clamp(6px, 2vw, 10px);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+/* ─── Loading spinner ─── */
+.cell-v2-spinner {
+  width: clamp(14px, 4vw, 18px);
+  height: clamp(14px, 4vw, 18px);
+  border: 2.5px solid rgba(0, 136, 255, 0.15);
+  border-top-color: var(--c-blue);
+  border-radius: 50%;
+  animation: cellSpin 700ms linear infinite;
+}
+@keyframes cellSpin { to { transform: rotate(360deg); } }
+
+/* ═══ Controls ═══ */
+.controls-v2 {
+  padding: var(--s-4);
+  padding-bottom: calc(var(--s-4) + var(--safe-bottom));
+  background: linear-gradient(180deg, rgba(13, 21, 38, 0.96), rgba(10, 15, 28, 0.98));
+  border-top: 1px solid var(--c-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+/* ═══ Multiplier Card ═══ */
+.cv2-multiplier-card {
+  background: linear-gradient(135deg, rgba(0, 200, 136, 0.08), rgba(0, 136, 255, 0.04));
+  border: 1px solid rgba(0, 200, 136, 0.2);
+  border-radius: var(--r-lg);
+  padding: var(--s-3) var(--s-4);
+}
+.cv2-mult-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.cv2-mult-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.cv2-mult-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.cv2-mult-value {
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 800;
+  color: var(--c-green);
+}
+.cv2-mult-payout {
+  font-size: clamp(14px, 4vw, 17px);
+  font-weight: 700;
+  color: #fff;
+}
+.cv2-mult-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ═══ Bet Section ═══ */
+.cv2-bet-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.cv2-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.cv2-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.cv2-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cv2-label-value {
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 800;
+  color: var(--c-blue);
+}
+
+/* ═══ Bet Input ═══ */
+.cv2-bet-group {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+}
+.cv2-adj-btn {
+  width: var(--touch-min);
+  height: var(--touch-min);
+  min-width: var(--touch-min);
+  border-radius: var(--r-sm);
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cv2-adj-btn:active {
+  background: rgba(0, 136, 255, 0.1);
+  border-color: var(--c-blue);
+  color: var(--c-blue);
+  transform: scale(0.95);
+}
+.cv2-input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.cv2-input {
+  width: 100%;
+  height: var(--touch-min);
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  padding: 0 44px 0 var(--s-4);
+  font-size: clamp(14px, 4vw, 16px);
+  font-weight: 600;
+  color: #fff;
+  outline: none;
+}
+.cv2-input:focus {
+  border-color: rgba(0, 136, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.08);
+}
+.cv2-input-unit {
+  position: absolute;
+  right: var(--s-3);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+/* ═══ Mine Scale Selector ═══ */
+.cv2-scale-wrapper {
+  position: relative;
+  margin: 0 calc(-1 * var(--s-4));
+}
+.cv2-scale-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  z-index: 3;
+  pointer-events: none;
+}
+.cv2-scale-fade-left {
+  left: 0;
+  background: linear-gradient(90deg, rgba(13, 21, 38, 0.98), transparent);
+}
+.cv2-scale-fade-right {
+  right: 0;
+  background: linear-gradient(-90deg, rgba(10, 15, 28, 0.98), transparent);
+}
+.cv2-scale-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: var(--s-2) 36px;
+  gap: 0;
+}
+.cv2-scale-scroll::-webkit-scrollbar { display: none; }
+
+.cv2-scale-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+  min-width: clamp(36px, 10vw, 44px);
+  padding: var(--s-2) 2px var(--s-3);
+  scroll-snap-align: center;
+  position: relative;
+}
+.cv2-scale-tick {
+  width: 2px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 1px;
+  transition: all 120ms ease;
+}
+.cv2-scale-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-text-muted);
+  transition: all 120ms ease;
+}
+.cv2-scale-item-active .cv2-scale-tick {
+  height: 22px;
+  width: 3px;
+  background: var(--c-blue);
+  box-shadow: 0 0 8px rgba(0, 136, 255, 0.4);
+}
+.cv2-scale-item-active .cv2-scale-num {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--c-blue);
+}
+.cv2-scale-item:active .cv2-scale-num { color: var(--c-blue); }
+
+/* ═══ Action Buttons ═══ */
+.cv2-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.cv2-main-btn {
+  width: 100%;
+  height: clamp(50px, 13vw, 56px);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  transition: transform 100ms ease;
+}
+.cv2-main-btn:active:not(:disabled) { transform: scale(0.97); }
+.cv2-main-btn:disabled { opacity: 0.4; }
+
+.cv2-btn-bet {
+  background: linear-gradient(135deg, #0088ff, #005cbf);
+  box-shadow: 0 4px 16px rgba(0, 136, 255, 0.25);
+}
+.cv2-btn-cashout {
+  background: linear-gradient(135deg, #00c888, #00a06d);
+  box-shadow: 0 4px 16px rgba(0, 200, 136, 0.25);
+  animation: cashoutGlow 2s ease infinite;
+}
+@keyframes cashoutGlow {
+  0%, 100% { box-shadow: 0 4px 16px rgba(0, 200, 136, 0.25); }
+  50% { box-shadow: 0 4px 24px rgba(0, 200, 136, 0.4); }
+}
+
+.cv2-btn-text {
+  font-size: clamp(13px, 3.5vw, 15px);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.cv2-btn-amount {
+  font-size: clamp(13px, 3.5vw, 15px);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ═══ Result ═══ */
+.cv2-result-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.cv2-result-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--r-lg);
+}
+.cv2-result-win {
+  background: linear-gradient(135deg, rgba(0, 200, 136, 0.1), rgba(0, 200, 136, 0.04));
+  border: 1px solid rgba(0, 200, 136, 0.25);
+}
+.cv2-result-lose {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 107, 107, 0.04));
+  border: 1px solid rgba(255, 107, 107, 0.25);
+}
+.cv2-result-icon { font-size: clamp(24px, 7vw, 30px); }
+.cv2-result-text { display: flex; flex-direction: column; gap: 2px; }
+.cv2-result-title { font-size: clamp(14px, 4vw, 17px); font-weight: 800; color: #fff; }
+.cv2-result-amount { font-size: clamp(12px, 3.5vw, 14px); font-weight: 600; }
+.cv2-result-win .cv2-result-amount { color: var(--c-green); }
+.cv2-result-lose .cv2-result-amount { color: var(--c-red); }
+
+/* ═══ Info Row ═══ */
+.mines-info-row {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--s-2) var(--s-4);
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 11px;
+  color: var(--c-text-muted);
+}
+.mines-info-row span { color: #fff; font-weight: 600; }

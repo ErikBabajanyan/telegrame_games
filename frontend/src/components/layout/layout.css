@@ -1,0 +1,89 @@
+/* ═══ Bottom Nav ═══ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--c-bg);
+  border-top: 1px solid var(--c-border);
+  display: flex;
+  padding: var(--s-2) 0 calc(var(--s-2) + var(--safe-bottom));
+  z-index: 50;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--c-text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  padding: var(--s-1) 0;
+  min-height: var(--touch-min);
+  justify-content: center;
+}
+.nav-item.nav-active { color: var(--c-blue); }
+.nav-icon { font-size: 20px; }
+
+/* ═══ Game Header ═══ */
+.game-header-v2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s-3) var(--s-4);
+  padding-top: calc(var(--s-3) + var(--safe-top));
+  background: linear-gradient(180deg, rgba(13, 21, 38, 0.98), rgba(13, 21, 38, 0.9));
+  border-bottom: 1px solid var(--c-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.gh-back {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gh-back:active { background: rgba(255, 255, 255, 0.08); transform: scale(0.95); }
+.gh-title {
+  font-size: clamp(14px, 4vw, 16px);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.gh-balance {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  background: var(--c-blue-glow);
+  border: 1px solid rgba(0, 136, 255, 0.2);
+  border-radius: var(--r-md);
+  padding: 6px clamp(8px, 2vw, 14px);
+  white-space: nowrap;
+}
+.gh-balance-icon { font-size: 13px; }
+.gh-balance-value { font-size: clamp(12px, 3vw, 14px); font-weight: 700; color: #fff; }
+.gh-balance-unit { font-size: 10px; font-weight: 600; color: var(--c-blue); }
+
+/* ═══ Lobby Header ═══ */
+.lobby-header {
+  background: linear-gradient(180deg, rgba(13, 21, 38, 0.98), transparent);
+  padding: calc(var(--s-4) + var(--safe-top)) var(--s-4) var(--s-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lobby-logo { font-size: 18px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+.lobby-logo span { color: var(--c-blue); }

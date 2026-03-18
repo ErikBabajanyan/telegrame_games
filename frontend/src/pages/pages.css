@@ -1,0 +1,314 @@
+/* ══════════════════════════════════════
+   ALL PAGES — Responsive Design
+   ══════════════════════════════════════ */
+
+/* ═══ Shared ═══ */
+.page-header {
+  padding: var(--s-4);
+  border-bottom: 1px solid var(--c-border);
+}
+.page-header h2 { font-size: 18px; font-weight: 800; color: #fff; }
+.page-subtitle { font-size: 12px; color: var(--c-text-muted); }
+.page-loader { display: flex; justify-content: center; padding: 60px 0; }
+.page-empty { text-align: center; padding: 60px var(--s-5); color: var(--c-text-muted); font-size: 14px; }
+
+/* ═══ Lobby ═══ */
+.lobby {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: calc(60px + var(--safe-bottom));
+  background: linear-gradient(180deg, #080e1a, var(--c-bg));
+}
+.lobby-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0 var(--s-3);
+}
+.tab {
+  flex: 1;
+  padding: var(--s-3) 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--c-text-muted);
+  border-bottom: 2px solid transparent;
+  min-height: var(--touch-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tab-active { color: var(--c-blue); border-bottom-color: var(--c-blue); }
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-3);
+  padding: var(--s-3);
+  flex: 1;
+  align-content: start;
+}
+.game-tile {
+  background: linear-gradient(145deg, #0d1a2e, #0a1220);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-border);
+  padding: clamp(14px, 4vw, 20px) var(--s-3);
+  text-align: center;
+  position: relative;
+  min-height: clamp(100px, 28vw, 130px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+}
+.game-tile-live {
+  border-color: rgba(0, 136, 255, 0.25);
+  background: linear-gradient(145deg, #0d1f3a, #0a1628);
+}
+.game-tile-live:active { border-color: rgba(0, 136, 255, 0.5); transform: scale(0.98); }
+.game-tile-soon { opacity: 0.5; }
+.game-tile-icon { font-size: clamp(26px, 7vw, 32px); }
+.game-tile-name { font-size: clamp(11px, 3vw, 13px); font-weight: 700; color: #fff; }
+.game-tile-badge { font-size: 9px; padding: 2px 8px; border-radius: var(--r-sm); font-weight: 700; }
+.badge-live { background: var(--c-green-glow); color: var(--c-green); }
+.badge-soon { background: rgba(255, 255, 255, 0.04); color: var(--c-text-muted); }
+.game-tile-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 10, 20, 0.6);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  opacity: 0.4;
+}
+
+/* ═══ Mines Page ═══ */
+.mines-page-v2 {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(0, 136, 255, 0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #080e1a, var(--c-bg));
+}
+.mines-board-v2-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: var(--s-2) var(--s-3);
+}
+.mines-seed-v2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  padding: var(--s-1) var(--s-4);
+  font-size: 10px;
+  color: var(--c-text-muted);
+}
+.mines-seed-hash { font-family: monospace; font-size: 9px; color: #3a4a5a; }
+
+/* ═══ HiLo Page ═══ */
+.hilo-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(124, 58, 237, 0.05) 0%, transparent 60%),
+    linear-gradient(180deg, #080e1a, var(--c-bg));
+}
+.hilo-card-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  min-height: 0;
+}
+.hilo-card-label {
+  font-size: 10px;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+/* ═══ Dice Page ═══ */
+.dice-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(245, 158, 11, 0.04) 0%, transparent 60%),
+    linear-gradient(180deg, #080e1a, var(--c-bg));
+}
+.dice-main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-5);
+  padding: var(--s-5);
+  min-height: 0;
+}
+
+/* ═══ Wallet Page ═══ */
+.wallet-page {
+  padding-bottom: calc(64px + var(--safe-bottom));
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.wallet-page-header { padding: calc(var(--s-4) + var(--safe-top)) var(--s-4) var(--s-4); }
+.wallet-page-header h2 { font-size: 18px; font-weight: 800; color: #fff; }
+.wallet-card {
+  margin: 0 var(--s-4);
+  background: linear-gradient(135deg, rgba(0, 136, 255, 0.06), rgba(120, 0, 255, 0.04));
+  border: 1px solid rgba(0, 136, 255, 0.12);
+  border-radius: var(--r-xl);
+  padding: var(--s-6);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.wallet-balance-large {
+  font-size: clamp(28px, 8vw, 36px);
+  font-weight: 900;
+  color: #fff;
+}
+.wallet-locked { font-size: 12px; color: #ffa500; }
+.wallet-actions { display: flex; gap: var(--s-3); padding: var(--s-4); }
+.wallet-stats { display: flex; gap: var(--s-2); padding: 0 var(--s-4); margin-bottom: var(--s-4); }
+.stat-card {
+  flex: 1;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: var(--s-3);
+  text-align: center;
+}
+.stat-label { font-size: 10px; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: var(--s-1); }
+.stat-value { font-size: clamp(14px, 4vw, 16px); font-weight: 700; color: #fff; }
+
+/* ═══ Transactions ═══ */
+.tx-section { padding: 0 var(--s-4); }
+.tx-section-title { font-size: 10px; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 0 0 var(--s-2); }
+.tx-empty { text-align: center; padding: var(--s-5); color: var(--c-text-muted); font-size: 13px; }
+.tx-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--c-border);
+  min-height: var(--touch-min);
+}
+.tx-left { display: flex; align-items: center; gap: var(--s-3); min-width: 0; }
+.tx-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.tx-icon-deposit { background: var(--c-blue-glow); }
+.tx-icon-withdrawal { background: var(--c-green-glow); }
+.tx-icon-win { background: var(--c-green-glow); }
+.tx-icon-bet { background: var(--c-red-glow); }
+.tx-icon-refund { background: var(--c-blue-glow); }
+.tx-info { min-width: 0; }
+.tx-type { font-size: 13px; font-weight: 600; color: #fff; }
+.tx-time { font-size: 10px; color: var(--c-text-muted); }
+.tx-amount { font-size: 13px; font-weight: 700; white-space: nowrap; }
+.tx-pos { color: var(--c-green); }
+.tx-neg { color: var(--c-red); }
+
+/* ═══ Bets Page ═══ */
+.bets-page {
+  padding-bottom: calc(64px + var(--safe-bottom));
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.bets-list { padding: 0 var(--s-4); }
+.bet-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--c-border);
+  min-height: var(--touch-min);
+}
+.bet-game { font-size: 13px; font-weight: 600; color: #fff; }
+.bet-time { font-size: 10px; color: var(--c-text-muted); }
+.bet-right { text-align: right; flex-shrink: 0; margin-left: var(--s-3); }
+.bet-win { color: var(--c-green); font-weight: 700; }
+.bet-loss { color: var(--c-red); font-weight: 700; }
+.bet-mult { font-size: 11px; color: var(--c-text-muted); }
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-4);
+}
+.page-btn {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  padding: var(--s-2) var(--s-4);
+  font-size: 12px;
+  color: var(--c-text-muted);
+  min-height: 36px;
+}
+.page-btn:disabled { opacity: 0.4; }
+.page-info { font-size: 12px; color: var(--c-text-muted); }
+
+/* ═══ Profile Page ═══ */
+.profile-page {
+  padding-bottom: calc(64px + var(--safe-bottom));
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.profile-card {
+  margin: var(--s-4);
+  background: linear-gradient(145deg, #0d1a2e, #0a1220);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-xl);
+  padding: var(--s-6);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+}
+.profile-avatar {
+  width: clamp(48px, 14vw, 60px);
+  height: clamp(48px, 14vw, 60px);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0088ff, #00c888);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(20px, 6vw, 26px);
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: var(--s-2);
+  box-shadow: 0 0 20px rgba(0, 136, 255, 0.2);
+}
+.profile-name { font-size: clamp(16px, 5vw, 20px); font-weight: 800; color: #fff; }
+.profile-username { font-size: 13px; color: var(--c-blue); font-weight: 600; }
+.profile-id { font-size: 10px; color: var(--c-text-muted); }
+.profile-actions { padding: var(--s-4); }

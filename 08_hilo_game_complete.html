@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TON Casino — HiLo Game: Complete Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#060a14;color:#e2e8f0;font-size:14px;line-height:1.75}
+
+  .cover{min-height:100vh;background:linear-gradient(160deg,#060a14 0%,#0d0a1e 40%,#060a14 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;position:relative;overflow:hidden}
+  .cover::before{content:'🃏';position:absolute;font-size:280px;opacity:0.04;top:50%;left:50%;transform:translate(-50%,-50%)}
+  .cover::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 40% 50%,rgba(120,0,255,0.1) 0%,transparent 55%),radial-gradient(circle at 60% 50%,rgba(0,136,255,0.08) 0%,transparent 55%)}
+  .doc-badge{position:relative;z-index:1;background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff;padding:10px 28px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:36px}
+  .cover-title{position:relative;z-index:1;font-size:clamp(40px,7vw,80px);font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,#c4b5fd 40%,#60a5fa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{position:relative;z-index:1;font-size:17px;color:#718096;max-width:560px;margin-bottom:48px}
+  .meta-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+  .meta-pill{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px;padding:8px 20px;font-size:12px;color:#a5b4c8;font-weight:500}
+
+  .page{max-width:1000px;margin:0 auto;padding:80px 40px}
+  h2{font-size:26px;font-weight:800;color:#fff;margin-bottom:8px;margin-top:72px;padding-bottom:12px;border-bottom:2px solid #1a1030}
+  h2:first-child{margin-top:0}
+  .h2n{color:#7c3aed}
+  h3{font-size:17px;font-weight:700;color:#cdd9e5;margin-top:28px;margin-bottom:10px}
+  h4{font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1.5px;margin-top:20px;margin-bottom:8px}
+  p{color:#8b949e;margin-bottom:14px;font-size:14px}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#0d1526;border:1px solid rgba(255,255,255,0.06);padding:2px 7px;border-radius:4px;color:#93c5fd}
+  pre{font-family:'JetBrains Mono',monospace;font-size:12px;background:#0a0f1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;overflow-x:auto;color:#e2e8f0;line-height:1.7;margin:16px 0}
+  .kw{color:#f472b6} .str{color:#93c5fd} .cmt{color:#4a5568} .fn{color:#c4b5fd} .num{color:#fbbf24} .prop{color:#60a5fa}
+  table{width:100%;border-collapse:collapse;margin:20px 0}
+  th{background:#1a1030;color:#7c3aed;padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:#cdd9e5;font-size:13px}
+  .callout{background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(59,130,246,0.04));border:1px solid rgba(124,58,237,0.2);border-radius:14px;padding:20px;margin:20px 0}
+  .callout p{margin:0;color:#cdd9e5;font-size:13px}
+  ul{list-style:none;padding:0;margin:12px 0}
+  ul li{padding:7px 0;padding-left:18px;position:relative;color:#8b949e;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px}
+  ul li::before{content:'→';position:absolute;left:0;color:#7c3aed}
+
+  /* Phone mockup */
+  .screens-row{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin:40px 0}
+  .phone-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .phone-label{font-size:12px;font-weight:700;color:#6b7b8d;text-transform:uppercase;letter-spacing:2px}
+  .phone{width:300px;height:620px;background:#060a14;border-radius:40px;border:3px solid #1a2040;box-shadow:0 40px 100px rgba(0,0,0,0.7);overflow:hidden;position:relative;flex-shrink:0}
+  .phone-notch{width:80px;height:22px;background:#000;border-radius:0 0 14px 14px;margin:0 auto;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10}
+
+  /* HiLo screen */
+  .s-hilo{width:100%;height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,#080e1a,#060a14);position:relative}
+  .s-hilo::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);top:25%;left:50%;transform:translate(-50%,-50%)}
+  .s-hheader{padding:32px 14px 10px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+  .s-hback{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:#6b7b8d;font-size:16px}
+  .s-htitle{font-size:15px;font-weight:800;color:#fff;letter-spacing:2px}
+  .s-hbal{font-size:12px;font-weight:700;color:#fff;background:rgba(0,136,255,0.1);border:1px solid rgba(0,136,255,0.2);border-radius:10px;padding:6px 12px}
+
+  /* Card area */
+  .s-card-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;position:relative;z-index:2}
+  .s-card-history{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .s-card-mini{width:32px;height:44px;border-radius:6px;background:#1a1030;border:1px solid rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#a78bfa;flex-shrink:0}
+  .s-card-mini-correct{background:rgba(0,200,136,0.1);border-color:rgba(0,200,136,0.3);color:#00c888}
+  .s-card-main{width:120px;height:170px;border-radius:16px;background:linear-gradient(145deg,#1a1040,#120d2a);border:2px solid rgba(124,58,237,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 8px 40px rgba(124,58,237,0.15)}
+  .s-card-suit{font-size:14px;opacity:0.6}
+  .s-card-value{font-size:42px;font-weight:900;color:#fff}
+  .s-card-name{font-size:11px;color:#a78bfa;font-weight:600}
+
+  /* HiLo buttons */
+  .s-hilo-btns{display:flex;gap:12px;width:100%;padding:0 20px}
+  .s-hilo-btn{flex:1;height:56px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .s-hi-btn{background:linear-gradient(135deg,#16a34a,#15803d);box-shadow:0 4px 16px rgba(22,163,74,0.25)}
+  .s-lo-btn{background:linear-gradient(135deg,#dc2626,#b91c1c);box-shadow:0 4px 16px rgba(220,38,38,0.25)}
+  .s-skip-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)}
+  .s-hilo-btn-text{font-size:14px;font-weight:800;color:#fff;letter-spacing:0.5px}
+  .s-hilo-btn-sub{font-size:9px;color:rgba(255,255,255,0.5);font-weight:600}
+
+  .s-hmult{display:flex;justify-content:space-around;padding:10px 14px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.15);border-radius:12px;margin:0 14px}
+  .s-hmult-col{text-align:center}
+  .s-hmult-label{font-size:9px;color:#4a5568;text-transform:uppercase;font-weight:600;letter-spacing:0.5px}
+  .s-hmult-val{font-size:18px;font-weight:800;color:#a78bfa;margin-top:2px}
+  .s-hmult-pay{font-size:14px;font-weight:700;color:#fff;margin-top:2px}
+  .s-hmult-div{width:1px;background:rgba(255,255,255,0.06)}
+
+  .s-hcontrols{padding:12px 14px 20px;position:relative;z-index:2;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,rgba(13,21,38,0.96),rgba(10,15,28,0.98));border-top:1px solid rgba(255,255,255,0.04)}
+  .s-hcashout{width:100%;height:48px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(124,58,237,0.25)}
+
+  /* State diagram */
+  .state-diagram{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:24px 0}
+  .state-box{background:#0d1526;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 20px;text-align:center;min-width:100px}
+  .state-box-active{border-color:rgba(124,58,237,0.4);background:rgba(124,58,237,0.08)}
+  .state-name{font-size:13px;font-weight:700;color:#fff}
+  .state-desc{font-size:10px;color:#4a5568;margin-top:3px}
+  .state-arrow{display:flex;align-items:center;color:#4a5568;font-size:20px}
+
+  .file-tree{background:#0a0f1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;margin:16px 0}
+  .ft-dir{color:#93c5fd}
+  .ft-file{color:#e2e8f0}
+  .ft-cmt{color:#4a5568}
+  .ft-i1{padding-left:20px}
+  .ft-i2{padding-left:40px}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="doc-badge">HiLo Game — Complete Spec</div>
+  <div class="cover-title">🃏 HiLo<br/>Game</div>
+  <div class="cover-sub">Card-based prediction game — guess if the next card is Higher or Lower. Full specification: rules, math, UI, backend, and integration.</div>
+  <div class="meta-row">
+    <div class="meta-pill">🃏 52 Cards</div>
+    <div class="meta-pill">📊 2.5% Edge</div>
+    <div class="meta-pill">⚡ Per-Round RNG</div>
+    <div class="meta-pill">🎯 Dynamic Odds</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- §1 GAME OVERVIEW -->
+  <h2><span class="h2n">§1.</span> Game Overview</h2>
+  <p>HiLo is a card prediction game. A card is shown, and the player guesses whether the next card will be <strong>Higher</strong> or <strong>Lower</strong>. Each correct guess increases the multiplier. The player can cash out at any time.</p>
+
+  <div class="callout">
+    <p>🎯 <strong>Core mechanic:</strong> A standard 52-card deck. Player sees the current card and predicts the next one. Probability-based multipliers — the more obvious the guess, the lower the payout. Equal cards count as a loss.</p>
+  </div>
+
+  <table>
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Deck</td><td>52 cards (standard, no jokers)</td></tr>
+    <tr><td>Card order</td><td>A(1) 2 3 4 5 6 7 8 9 10 J(11) Q(12) K(13)</td></tr>
+    <tr><td>Equal card</td><td>Player loses (same value = house wins)</td></tr>
+    <tr><td>House edge</td><td>2.5% applied to multipliers</td></tr>
+    <tr><td>RTP</td><td>97.5%</td></tr>
+    <tr><td>Max rounds</td><td>52 (entire deck — virtually impossible)</td></tr>
+    <tr><td>Min bet</td><td>0.01 TON</td></tr>
+    <tr><td>Max bet</td><td>500 TON</td></tr>
+    <tr><td>Outcome model</td><td>Per-round RNG with luck factor (same as Mines)</td></tr>
+  </table>
+
+  <h3>How to Play</h3>
+  <ul>
+    <li>Player sets bet amount and taps "BET"</li>
+    <li>First card is dealt face-up</li>
+    <li>Player taps "HIGHER" or "LOWER" to predict the next card</li>
+    <li>Next card is revealed — if correct, multiplier increases</li>
+    <li>Player can "CASH OUT" at any time after 1 correct guess</li>
+    <li>If wrong (or equal), round is lost and bet is forfeited</li>
+    <li>Optional: "SKIP" — skip the current card (costs a small multiplier penalty)</li>
+  </ul>
+
+  <!-- §2 STATE MACHINE -->
+  <h2><span class="h2n">§2.</span> Game State Machine</h2>
+
+  <div class="state-diagram">
+    <div class="state-box"><div class="state-name">IDLE</div><div class="state-desc">No active game</div></div>
+    <div class="state-arrow">→</div>
+    <div class="state-box state-box-active"><div class="state-name">ACTIVE</div><div class="state-desc">Card shown, awaiting guess</div></div>
+    <div class="state-arrow">→</div>
+    <div class="state-box"><div class="state-name">REVEALING</div><div class="state-desc">Card flip animation</div></div>
+    <div class="state-arrow">→</div>
+    <div class="state-box"><div class="state-name">CASHOUT / LOST</div><div class="state-desc">Game ended</div></div>
+  </div>
+
+  <table>
+    <tr><th>State</th><th>Allowed Actions</th><th>Balance Effect</th></tr>
+    <tr><td>IDLE</td><td>Set bet, start game</td><td>Bet deducted on start</td></tr>
+    <tr><td>ACTIVE</td><td>Guess Higher, Guess Lower, Skip, Cash Out</td><td>No change during play</td></tr>
+    <tr><td>REVEALING</td><td>None (animation playing)</td><td>—</td></tr>
+    <tr><td>CASHOUT</td><td>Start new game</td><td>Payout credited</td></tr>
+    <tr><td>LOST</td><td>Start new game</td><td>Bet forfeited at start</td></tr>
+  </table>
+
+  <!-- §3 MATHEMATICAL MODEL -->
+  <h2><span class="h2n">§3.</span> Mathematical Model</h2>
+
+  <h3>Card Values</h3>
+  <p>Cards are valued A=1, 2-10 face value, J=11, Q=12, K=13. Each value has 4 suits (4 cards per value in a 52-card deck).</p>
+
+  <h3>Probability Calculation</h3>
+  <p>For a current card with value <code>V</code> (1–13):</p>
+
+  <table>
+    <tr><th>Guess</th><th>Formula</th><th>Description</th></tr>
+    <tr><td>Higher</td><td><code>cardsAbove / (totalRemaining - cardsEqual)</code></td><td>Cards with value > V</td></tr>
+    <tr><td>Lower</td><td><code>cardsBelow / (totalRemaining - cardsEqual)</code></td><td>Cards with value < V</td></tr>
+    <tr><td>Equal (loss)</td><td><code>cardsEqual / totalRemaining</code></td><td>Cards with value = V</td></tr>
+  </table>
+
+  <h3>Multiplier Calculation</h3>
+  <pre><span class="cmt">// Per-guess multiplier (applied cumulatively)</span>
+<span class="fn">guessMultiplier</span>(probability) = (<span class="num">1</span> / probability) × (<span class="num">1</span> - HOUSE_EDGE)
+<span class="fn">guessMultiplier</span>(probability) = (<span class="num">1</span> / probability) × <span class="num">0.975</span>
+
+<span class="cmt">// Total game multiplier after N correct guesses</span>
+<span class="fn">totalMultiplier</span> = guess1_mult × guess2_mult × ... × guessN_mult
+
+<span class="cmt">// Payout</span>
+<span class="fn">payout</span> = betAmount × totalMultiplier</pre>
+
+  <h3>Example Multiplier Table (first card)</h3>
+  <p>Assuming full deck (51 remaining cards, 4 cards of equal value):</p>
+
+  <table>
+    <tr><th>Current Card</th><th>"Higher" Prob</th><th>"Higher" Mult</th><th>"Lower" Prob</th><th>"Lower" Mult</th></tr>
+    <tr><td>Ace (1)</td><td>95.7% (45/47)</td><td>1.02×</td><td>0% (0/47)</td><td>—</td></tr>
+    <tr><td>2</td><td>87.2% (41/47)</td><td>1.12×</td><td>8.5% (4/47)</td><td>11.47×</td></tr>
+    <tr><td>3</td><td>78.7% (37/47)</td><td>1.24×</td><td>17.0% (8/47)</td><td>5.73×</td></tr>
+    <tr><td>5</td><td>61.7% (29/47)</td><td>1.58×</td><td>34.0% (16/47)</td><td>2.87×</td></tr>
+    <tr><td>7 (middle)</td><td>46.8% (22/47)</td><td>2.09×</td><td>46.8% (22/47)</td><td>2.09×</td></tr>
+    <tr><td>10</td><td>25.5% (12/47)</td><td>3.82×</td><td>68.1% (32/47)</td><td>1.43×</td></tr>
+    <tr><td>Queen (12)</td><td>8.5% (4/47)</td><td>11.47×</td><td>87.2% (41/47)</td><td>1.12×</td></tr>
+    <tr><td>King (13)</td><td>0% (0/47)</td><td>—</td><td>95.7% (45/47)</td><td>1.02×</td></tr>
+  </table>
+
+  <div class="callout">
+    <p>💡 <strong>Dynamic odds:</strong> Unlike Mines, each round has different multipliers based on the current card. A "7" is the hardest — equal probability either way, so both HI/LO pay ~2x. Edge cards (A, K) give near-certain guesses with low payout.</p>
+  </div>
+
+  <h3>Skip Mechanic</h3>
+  <p>Player can skip the current card. A new card is dealt without affecting the multiplier. Cost: the skip itself takes a round — so if the next card is bad, you've burned your position. Max 3 skips per game. Skip does NOT require a guess.</p>
+
+  <!-- §4 PER-ROUND RNG -->
+  <h2><span class="h2n">§4.</span> Per-Round RNG with Luck Factor</h2>
+  <p>Same model as Mines — no pre-generated deck. Each card is drawn independently.</p>
+
+  <pre><span class="cmt">// hilo.engine.ts — draw next card</span>
+<span class="kw">function</span> <span class="fn">drawNextCard</span>(
+  <span class="prop">currentValue</span>: <span class="str">number</span>,
+  <span class="prop">guess</span>: <span class="str">'higher' | 'lower'</span>,
+  <span class="prop">luckFactor</span>: <span class="str">number</span>
+): { <span class="prop">value</span>: <span class="str">number</span>; <span class="prop">suit</span>: <span class="str">string</span>; <span class="prop">isCorrect</span>: <span class="str">boolean</span> } {
+  <span class="cmt">// 1. Calculate base probability of winning this guess</span>
+  <span class="kw">const</span> <span class="prop">winProb</span> = <span class="fn">calculateWinProbability</span>(currentValue, guess)
+
+  <span class="cmt">// 2. Adjust with luck factor</span>
+  <span class="kw">const</span> <span class="prop">adjustedProb</span> = <span class="fn">clamp</span>(winProb / luckFactor, <span class="num">0.02</span>, <span class="num">0.98</span>)
+
+  <span class="cmt">// 3. Roll</span>
+  <span class="kw">const</span> <span class="prop">isCorrect</span> = <span class="fn">cryptoRandom</span>() &lt; adjustedProb
+
+  <span class="cmt">// 4. Generate a card that matches the result</span>
+  <span class="kw">const</span> <span class="prop">card</span> = <span class="fn">generateCardForResult</span>(currentValue, guess, isCorrect)
+
+  <span class="kw">return</span> card
+}</pre>
+
+  <div class="callout">
+    <p>⚠️ <strong>Luck factor inversion:</strong> Unlike Mines where <code>luckFactor > 1</code> makes mines MORE likely, in HiLo we divide the win probability by the luck factor. Higher luck factor = lower effective win chance. Same Redis key <code>luck:{userId}</code>, same hourly worker.</p>
+  </div>
+
+  <!-- §5 BACKEND ARCHITECTURE -->
+  <h2><span class="h2n">§5.</span> Backend Architecture</h2>
+
+  <h3>File Structure</h3>
+  <div class="file-tree">
+<span class="ft-dir">src/modules/games/hilo/</span><br/>
+<span class="ft-i1 ft-file">hilo.engine.ts</span>    <span class="ft-cmt">← Card logic, probability, RNG, multipliers</span><br/>
+<span class="ft-i1 ft-file">hilo.service.ts</span>   <span class="ft-cmt">← Game flow: start, guess, skip, cashout</span><br/>
+<span class="ft-i1 ft-file">hilo.routes.ts</span>    <span class="ft-cmt">← REST endpoints</span><br/>
+<span class="ft-i1 ft-file">hilo.model.ts</span>     <span class="ft-cmt">← Mongoose schema (extends game_rounds)</span><br/>
+<br/>
+<span class="ft-dir">src/types/</span><br/>
+<span class="ft-i1 ft-file">hilo.types.ts</span>     <span class="ft-cmt">← Interfaces: HiLoState, GuessResult, etc.</span><br/>
+  </div>
+
+  <h3>MongoDB Schema — HiLo Game Round</h3>
+  <p>Stored in the same <code>game_rounds</code> collection with <code>gameType: 'hilo'</code>.</p>
+
+  <pre><span class="cmt">// hilo-specific fields in game_rounds document</span>
+{
+  <span class="prop">gameType</span>: <span class="str">'hilo'</span>,
+  <span class="prop">hilo</span>: {
+    <span class="prop">currentCard</span>: { <span class="prop">value</span>: <span class="num">7</span>, <span class="prop">suit</span>: <span class="str">'hearts'</span> },
+    <span class="prop">history</span>: [
+      { <span class="prop">card</span>: { <span class="prop">value</span>: <span class="num">3</span>, <span class="prop">suit</span>: <span class="str">'spades'</span> }, <span class="prop">guess</span>: <span class="str">'higher'</span>, <span class="prop">result</span>: <span class="str">'correct'</span>, <span class="prop">multiplier</span>: <span class="num">1.24</span> },
+      { <span class="prop">card</span>: { <span class="prop">value</span>: <span class="num">7</span>, <span class="prop">suit</span>: <span class="str">'hearts'</span> }, <span class="prop">guess</span>: <span class="str">'higher'</span>, <span class="prop">result</span>: <span class="str">'correct'</span>, <span class="prop">multiplier</span>: <span class="num">2.09</span> },
+    ],
+    <span class="prop">roundNumber</span>: <span class="num">3</span>,
+    <span class="prop">skipsUsed</span>: <span class="num">0</span>,
+    <span class="prop">maxSkips</span>: <span class="num">3</span>,
+  }
+}</pre>
+
+  <h3>REST API Endpoints</h3>
+  <p>All prefixed with <code>/api/v1/games/hilo</code>. All require JWT auth.</p>
+
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Body</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/active</td><td>—</td><td>Check for active game (resume)</td></tr>
+    <tr><td>POST</td><td>/start</td><td>{betAmount}</td><td>Start game, deduct bet, deal first card</td></tr>
+    <tr><td>POST</td><td>/guess</td><td>{gameId, guess: 'higher'|'lower'}</td><td>Make a guess, reveal next card</td></tr>
+    <tr><td>POST</td><td>/skip</td><td>{gameId}</td><td>Skip current card (max 3)</td></tr>
+    <tr><td>POST</td><td>/cashout</td><td>{gameId}</td><td>Cash out with current multiplier</td></tr>
+    <tr><td>GET</td><td>/history</td><td>?page&limit</td><td>Past HiLo games</td></tr>
+  </table>
+
+  <h3>Game Flow (sequence)</h3>
+  <table>
+    <tr><th>Step</th><th>Action</th><th>Backend</th><th>Response</th></tr>
+    <tr><td>1</td><td>POST /start</td><td>Deduct bet, generate first card via RNG</td><td>{gameId, currentCard, roundNumber}</td></tr>
+    <tr><td>2</td><td>POST /guess {higher}</td><td>Roll next card, check guess, update multiplier</td><td>{correct, nextCard, multiplier, payout}</td></tr>
+    <tr><td>3a</td><td>Correct → show next card</td><td>Save to history, update current card</td><td>Player can guess again or cash out</td></tr>
+    <tr><td>3b</td><td>Wrong → game over</td><td>Set status=lost, forfeit bet</td><td>{gameOver, correctAnswer, finalCard}</td></tr>
+    <tr><td>4</td><td>POST /cashout</td><td>Credit payout, end game</td><td>{payout, multiplier, profit}</td></tr>
+  </table>
+
+  <!-- §6 UI DESIGN -->
+  <h2><span class="h2n">§6.</span> UI Design</h2>
+  <p>Three screen states: bet setup, active game, and game result.</p>
+
+  <div class="screens-row">
+
+    <!-- Active Game -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="s-hilo">
+          <div class="s-hheader">
+            <div class="s-hback">←</div>
+            <div class="s-htitle">HILO</div>
+            <div class="s-hbal">💎 12.50</div>
+          </div>
+
+          <!-- Card history -->
+          <div style="padding:8px 14px">
+            <div class="s-card-history">
+              <div class="s-card-mini s-card-mini-correct">3♠</div>
+              <div class="s-card-mini s-card-mini-correct">7♥</div>
+              <div class="s-card-mini s-card-mini-correct">J♦</div>
+            </div>
+          </div>
+
+          <!-- Current card -->
+          <div class="s-card-area">
+            <div style="font-size:10px;color:#4a5568;text-transform:uppercase;letter-spacing:1px;font-weight:600">Current Card</div>
+            <div class="s-card-main">
+              <div class="s-card-suit">♦</div>
+              <div class="s-card-value">J</div>
+              <div class="s-card-name">Jack</div>
+            </div>
+            <!-- HI/LO buttons -->
+            <div class="s-hilo-btns">
+              <div class="s-hilo-btn s-hi-btn">
+                <span class="s-hilo-btn-text">▲ HIGHER</span>
+                <span class="s-hilo-btn-sub">1.58× · 61.7%</span>
+              </div>
+              <div class="s-hilo-btn s-lo-btn">
+                <span class="s-hilo-btn-text">▼ LOWER</span>
+                <span class="s-hilo-btn-sub">2.44× · 40.0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multiplier card -->
+          <div class="s-hmult">
+            <div class="s-hmult-col"><div class="s-hmult-label">Round</div><div class="s-hmult-val">4</div></div>
+            <div class="s-hmult-div"></div>
+            <div class="s-hmult-col"><div class="s-hmult-label">Multiplier</div><div class="s-hmult-val">3.21×</div></div>
+            <div class="s-hmult-div"></div>
+            <div class="s-hmult-col"><div class="s-hmult-label">Payout</div><div class="s-hmult-pay">0.96 TON</div></div>
+          </div>
+
+          <div class="s-hcontrols">
+            <div style="display:flex;gap:8px">
+              <div class="s-hcashout" style="flex:3">
+                <span class="s-hilo-btn-text">CASH OUT</span>
+                <span style="font-size:13px;color:rgba(255,255,255,0.7);font-weight:600">0.96 TON</span>
+              </div>
+              <div style="flex:1;height:48px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:11px;color:#6b7b8d;font-weight:700">SKIP<br/><span style="font-size:9px">2 left</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">① Active Game</div>
+    </div>
+
+    <!-- Bet Setup -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="s-hilo">
+          <div class="s-hheader">
+            <div class="s-hback">←</div>
+            <div class="s-htitle">HILO</div>
+            <div class="s-hbal">💎 12.50</div>
+          </div>
+          <div class="s-card-area">
+            <div style="font-size:10px;color:#4a5568;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px">Place your bet</div>
+            <div class="s-card-main" style="opacity:0.3;border-style:dashed">
+              <div class="s-card-suit" style="opacity:0.3">?</div>
+              <div class="s-card-value" style="color:#4a5568">?</div>
+              <div class="s-card-name" style="color:#4a5568">First card</div>
+            </div>
+          </div>
+          <div class="s-hcontrols">
+            <div style="font-size:10px;color:#4a5568;text-transform:uppercase;font-weight:600;letter-spacing:0.5px">Bet Amount</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div style="width:40px;height:40px;border-radius:8px;background:#131d2e;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:#6b7b8d;font-size:13px;font-weight:700">½</div>
+              <div style="flex:1;height:40px;background:#131d2e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600">0.30 TON</div>
+              <div style="width:40px;height:40px;border-radius:8px;background:#131d2e;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:#6b7b8d;font-size:13px;font-weight:700">2x</div>
+            </div>
+            <div style="width:100%;height:52px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#5b21b6);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(124,58,237,0.25)">
+              <span style="font-size:14px;font-weight:800;color:#fff;letter-spacing:0.5px">BET</span>
+              <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.7)">0.30 TON</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">② Bet Setup</div>
+    </div>
+
+  </div>
+
+  <h3>UI Components</h3>
+  <table>
+    <tr><th>Component</th><th>Description</th></tr>
+    <tr><td>Card (main)</td><td>120×170px, rounded 16px, gradient bg, shows suit + value + name. Flip animation on reveal (Y-axis 3D rotate)</td></tr>
+    <tr><td>Card (mini/history)</td><td>32×44px, shows compact value+suit. Green border if correct guess</td></tr>
+    <tr><td>Higher button</td><td>Green gradient, shows "▲ HIGHER" + probability + multiplier</td></tr>
+    <tr><td>Lower button</td><td>Red gradient, shows "▼ LOWER" + probability + multiplier</td></tr>
+    <tr><td>Skip button</td><td>Ghost style, shows remaining skips</td></tr>
+    <tr><td>Cash Out</td><td>Purple gradient (HiLo accent), pulsing glow</td></tr>
+    <tr><td>Multiplier bar</td><td>3-column: Round | Multiplier | Payout</td></tr>
+    <tr><td>Card history strip</td><td>Horizontal scroll of mini cards showing past guesses</td></tr>
+  </table>
+
+  <h3>Animations</h3>
+  <ul>
+    <li>Card deal: slide in from right + fade (250ms)</li>
+    <li>Card flip: 3D Y-axis rotation (400ms) — shows back then front</li>
+    <li>Correct guess: card pulses green + multiplier counter animates up</li>
+    <li>Wrong guess: card flashes red + shake (300ms) + game over modal</li>
+    <li>Skip: current card slides out left, new card slides in right</li>
+    <li>Cash out: purple confetti + balance update</li>
+  </ul>
+
+  <h3>Color Theme (HiLo-specific)</h3>
+  <table>
+    <tr><th>Element</th><th>Color</th><th>Use</th></tr>
+    <tr><td>Primary accent</td><td>#7C3AED (purple)</td><td>Headers, buttons, multiplier, card border</td></tr>
+    <tr><td>Higher button</td><td>#16A34A (green)</td><td>Guess higher CTA</td></tr>
+    <tr><td>Lower button</td><td>#DC2626 (red)</td><td>Guess lower CTA</td></tr>
+    <tr><td>Card face</td><td>#1A1040 → #120D2A</td><td>Card gradient</td></tr>
+    <tr><td>Card glow</td><td>rgba(124,58,237,0.15)</td><td>Box shadow on current card</td></tr>
+    <tr><td>Correct</td><td>#00C888</td><td>History card border, correct flash</td></tr>
+    <tr><td>Wrong</td><td>#FF6B6B</td><td>Wrong flash, game over</td></tr>
+  </table>
+
+  <!-- §7 FRONTEND STRUCTURE -->
+  <h2><span class="h2n">§7.</span> Frontend Architecture</h2>
+
+  <div class="file-tree">
+<span class="ft-dir">src/</span><br/>
+<span class="ft-i1 ft-dir">pages/</span><br/>
+<span class="ft-i2 ft-file">HiLoGame.tsx</span>       <span class="ft-cmt">← Main page (same layout as MinesGame)</span><br/>
+<br/>
+<span class="ft-i1 ft-dir">components/games/</span><br/>
+<span class="ft-i2 ft-file">HiLoCard.tsx</span>       <span class="ft-cmt">← Main card with flip animation</span><br/>
+<span class="ft-i2 ft-file">HiLoCardMini.tsx</span>   <span class="ft-cmt">← Small history card</span><br/>
+<span class="ft-i2 ft-file">HiLoControls.tsx</span>   <span class="ft-cmt">← HI/LO buttons, skip, bet input</span><br/>
+<span class="ft-i2 ft-file">HiLoHistory.tsx</span>    <span class="ft-cmt">← Scrollable card history strip</span><br/>
+<span class="ft-i2 ft-file">hilo.css</span>           <span class="ft-cmt">← HiLo-specific styles</span><br/>
+<br/>
+<span class="ft-i1 ft-dir">stores/</span><br/>
+<span class="ft-i2 ft-file">useHiLoStore.ts</span>    <span class="ft-cmt">← Zustand store for HiLo state</span><br/>
+<br/>
+<span class="ft-i1 ft-dir">hooks/</span><br/>
+<span class="ft-i2 ft-file">useHiLoGame.ts</span>     <span class="ft-cmt">← Game hook (like useMinesGame)</span><br/>
+<br/>
+<span class="ft-i1 ft-dir">api/</span><br/>
+<span class="ft-i2 ft-file">hilo.ts</span>            <span class="ft-cmt">← API calls: start, guess, skip, cashout</span><br/>
+  </div>
+
+  <h3>Zustand Store Shape</h3>
+  <pre><span class="kw">interface</span> <span class="fn">HiLoState</span> {
+  <span class="prop">gameId</span>: <span class="str">string | null</span>
+  <span class="prop">status</span>: <span class="str">'idle' | 'active' | 'revealing' | 'won' | 'lost'</span>
+  <span class="prop">betAmount</span>: <span class="str">number</span>
+  <span class="prop">currentCard</span>: { <span class="prop">value</span>: <span class="str">number</span>; <span class="prop">suit</span>: <span class="str">string</span> } | <span class="str">null</span>
+  <span class="prop">history</span>: <span class="fn">HiLoRound</span>[]
+  <span class="prop">roundNumber</span>: <span class="str">number</span>
+  <span class="prop">currentMultiplier</span>: <span class="str">number</span>
+  <span class="prop">currentPayout</span>: <span class="str">number</span>
+  <span class="prop">skipsRemaining</span>: <span class="str">number</span>
+  <span class="prop">hiMultiplier</span>: <span class="str">number</span>       <span class="cmt">// shown on HI button</span>
+  <span class="prop">loMultiplier</span>: <span class="str">number</span>       <span class="cmt">// shown on LO button</span>
+  <span class="prop">hiProbability</span>: <span class="str">number</span>      <span class="cmt">// shown as %</span>
+  <span class="prop">loProbability</span>: <span class="str">number</span>      <span class="cmt">// shown as %</span>
+  <span class="prop">isLoading</span>: <span class="str">boolean</span>
+
+  <span class="cmt">// Actions</span>
+  <span class="fn">startGame</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">guessHigher</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">guessLower</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">skip</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">cashOut</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">reset</span>: () =&gt; <span class="str">void</span>
+}</pre>
+
+  <!-- §8 INTEGRATION CHECKLIST -->
+  <h2><span class="h2n">§8.</span> Integration Checklist</h2>
+
+  <table>
+    <tr><th>#</th><th>Task</th><th>Files</th></tr>
+    <tr><td>1</td><td>Create types</td><td>src/types/hilo.types.ts</td></tr>
+    <tr><td>2</td><td>Add constants</td><td>src/types/constants.ts (HILO_HOUSE_EDGE, MAX_SKIPS, etc.)</td></tr>
+    <tr><td>3</td><td>Build engine</td><td>hilo.engine.ts — card logic, probability, RNG, multipliers</td></tr>
+    <tr><td>4</td><td>Build service</td><td>hilo.service.ts — start, guess, skip, cashout, getActive</td></tr>
+    <tr><td>5</td><td>Build routes</td><td>hilo.routes.ts — register all endpoints</td></tr>
+    <tr><td>6</td><td>Update model</td><td>hilo.model.ts or extend game_rounds schema for hilo fields</td></tr>
+    <tr><td>7</td><td>Register in app.ts</td><td>app.register(hiloRoutes, { prefix: '/api/v1/games/hilo' })</td></tr>
+    <tr><td>8</td><td>FE: API layer</td><td>src/api/hilo.ts</td></tr>
+    <tr><td>9</td><td>FE: Store</td><td>src/stores/useHiLoStore.ts</td></tr>
+    <tr><td>10</td><td>FE: Hook</td><td>src/hooks/useHiLoGame.ts</td></tr>
+    <tr><td>11</td><td>FE: Components</td><td>HiLoCard, HiLoCardMini, HiLoControls, HiLoHistory, hilo.css</td></tr>
+    <tr><td>12</td><td>FE: Page</td><td>src/pages/HiLoGame.tsx</td></tr>
+    <tr><td>13</td><td>FE: Router</td><td>Add route /game/hilo in App.tsx</td></tr>
+    <tr><td>14</td><td>FE: Lobby</td><td>Mark HiLo as "Live" in Lobby.tsx</td></tr>
+  </table>
+
+  <div class="callout">
+    <p>🔄 <strong>Shared infrastructure:</strong> HiLo reuses the existing auth, wallet, balance, transaction, WebSocket, and luck factor systems. No new infrastructure needed — only game-specific engine, service, routes, and UI.</p>
+  </div>
+
+  <div style="margin-top:80px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.05);text-align:center;color:#4a5568;font-size:12px">
+    TON Casino — HiLo Game Complete Documentation — v1.0.0 — March 2026
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TON Casino — Mines Game: Complete Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#080c12;color:#e2e8f0;font-size:14px;line-height:1.75}
+
+  /* ─── COVER ─── */
+  .cover{min-height:100vh;background:linear-gradient(160deg,#080c12 0%,#0a1a0d 40%,#080c12 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;position:relative;overflow:hidden}
+  .cover::before{content:'💣';position:absolute;font-size:300px;opacity:0.04;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+  .cover::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(34,197,94,0.12) 0%,transparent 55%),radial-gradient(circle at 70% 50%,rgba(239,68,68,0.1) 0%,transparent 55%);pointer-events:none}
+  .doc-badge{position:relative;z-index:1;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:10px 28px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;display:inline-block}
+  .cover-title{position:relative;z-index:1;font-size:clamp(40px,7vw,84px);font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,#86efac 40%,#4ade80 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-game{position:relative;z-index:1;font-size:clamp(16px,3vw,26px);font-weight:700;color:#f87171;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px}
+  .cover-sub{position:relative;z-index:1;font-size:16px;color:#64748b;max-width:600px;margin-bottom:48px;line-height:1.7}
+  .cover-chips{position:relative;z-index:1;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .chip{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:9px 20px;font-size:13px;color:#cbd5e0;font-weight:500}
+  .chip-g{border-color:rgba(34,197,94,0.4);color:#4ade80}
+  .chip-r{border-color:rgba(239,68,68,0.4);color:#f87171}
+
+  /* ─── PAGE ─── */
+  .page{max-width:980px;margin:0 auto;padding:80px 40px}
+
+  /* ─── SECTION ─── */
+  .section{margin-top:80px}
+  .section:first-child{margin-top:0}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#22c55e;margin-bottom:10px}
+  .section-title{font-size:28px;font-weight:800;color:#f1f5f9;margin-bottom:6px;letter-spacing:-0.5px}
+  .section-divider{width:48px;height:3px;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:2px;margin-bottom:20px}
+  .section-desc{font-size:15px;color:#64748b;margin-bottom:24px;max-width:780px;line-height:1.7}
+  h3{font-size:17px;font-weight:700;color:#e2e8f0;margin-top:36px;margin-bottom:12px}
+  h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#22c55e;margin-top:28px;margin-bottom:10px}
+  p{color:#64748b;margin-bottom:14px;font-size:14px;line-height:1.7}
+
+  /* ─── CODE ─── */
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#0d1117;border:1px solid #1e293b;padding:2px 7px;border-radius:4px;color:#86efac}
+  pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:#0a0e17;border:1px solid #1e293b;border-radius:12px;padding:24px;overflow-x:auto;color:#e2e8f0;line-height:1.85;margin:18px 0;position:relative}
+  pre .file-tag{position:absolute;top:12px;right:16px;font-size:10px;color:#334155;font-family:'Inter',sans-serif;letter-spacing:1px}
+  .kw{color:#f472b6}.str{color:#86efac}.cmt{color:#475569}.fn{color:#c084fc}.num{color:#fb923c}.prop{color:#7dd3fc}.type{color:#fbbf24}
+
+  /* ─── CALLOUT ─── */
+  .callout{border-radius:12px;padding:18px 22px;margin:20px 0}
+  .callout p{margin:0;font-size:14px;line-height:1.65}
+  .c-green{background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.25)}.c-green p{color:#bbf7d0}
+  .c-red{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.25)}.c-red p{color:#fecaca}
+  .c-orange{background:rgba(249,115,22,0.07);border:1px solid rgba(249,115,22,0.25)}.c-orange p{color:#fed7aa}
+  .c-blue{background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.25)}.c-blue p{color:#bfdbfe}
+
+  /* ─── TABLES ─── */
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+  thead tr{background:#0f1a12}
+  th{color:#22c55e;padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;border-bottom:1px solid #1e293b}
+  th.right{text-align:right}
+  td{padding:10px 12px;border-bottom:1px solid #0f1a12;color:#cbd5e0;vertical-align:middle}
+  td.right{text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:rgba(34,197,94,0.03)}
+  .highlight{background:rgba(34,197,94,0.08)!important}
+
+  /* ─── MULTIPLIER COLOUR CODING ─── */
+  .mx1{color:#94a3b8}
+  .mx2{color:#fbbf24}
+  .mx3{color:#fb923c}
+  .mx4{color:#f87171}
+  .mx5{color:#c084fc}
+  .mx6{color:#60a5fa}
+  .prob-hi{color:#4ade80;font-weight:600}
+  .prob-md{color:#fbbf24}
+  .prob-lo{color:#f87171}
+
+  /* ─── GAME BOARD PREVIEW ─── */
+  .board-preview{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:300px;margin:20px auto}
+  .cell-p{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid}
+  .cell-hidden{background:linear-gradient(135deg,#1a3050,#0f2035);border-color:#1e3a5a}
+  .cell-gem{background:linear-gradient(135deg,#004d30,#006640);border-color:#22c55e}
+  .cell-mine{background:linear-gradient(135deg,#4d0000,#660000);border-color:#ef4444}
+  .cell-dot{width:10px;height:10px;background:rgba(255,255,255,0.15);border-radius:50%}
+
+  /* ─── STATE FLOW ─── */
+  .flow-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0}
+  .flow-box{background:#0a0e17;border:1px solid #1e293b;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;color:#f1f5f9;text-align:center;min-width:100px}
+  .flow-box.state-active{border-color:#22c55e;color:#4ade80}
+  .flow-box.state-lost{border-color:#ef4444;color:#f87171}
+  .flow-box.state-won{border-color:#3b82f6;color:#60a5fa}
+  .flow-arrow{color:#334155;font-size:18px;flex-shrink:0}
+  .flow-label{font-size:10px;color:#475569;text-align:center;margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+
+  /* ─── TWO COL ─── */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media(max-width:680px){.two-col{grid-template-columns:1fr}}
+  .info-card{background:#0a0e17;border:1px solid #1e293b;border-radius:12px;padding:20px}
+  .info-card h4{margin-top:0;margin-bottom:12px}
+  ul.list{list-style:none;padding:0;margin:8px 0}
+  ul.list li{padding:7px 0;padding-left:16px;position:relative;color:#64748b;border-bottom:1px solid #0f1a12;font-size:13px;line-height:1.5}
+  ul.list li::before{content:'›';position:absolute;left:0;color:#22c55e;font-weight:700}
+  ul.list li:last-child{border-bottom:none}
+  .badge{display:inline-block;padding:2px 9px;border-radius:100px;font-size:11px;font-weight:600}
+  .b-green{background:rgba(34,197,94,0.15);color:#4ade80}
+  .b-red{background:rgba(239,68,68,0.15);color:#f87171}
+  .b-orange{background:rgba(249,115,22,0.15);color:#fb923c}
+  .b-blue{background:rgba(59,130,246,0.15);color:#60a5fa}
+  .b-purple{background:rgba(168,85,247,0.15);color:#c084fc}
+
+  /* ─── BIG NUMBER STATS ─── */
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px;margin:24px 0}
+  .stat-card{background:#0a0e17;border:1px solid #1e293b;border-radius:12px;padding:20px;text-align:center}
+  .stat-num{font-size:28px;font-weight:800;margin-bottom:4px}
+  .stat-label{font-size:11px;color:#475569;text-transform:uppercase;letter-spacing:1.5px}
+  .stat-g{color:#4ade80}.stat-r{color:#f87171}.stat-o{color:#fb923c}.stat-b{color:#60a5fa}.stat-p{color:#c084fc}
+
+  /* ─── FORMULA BOX ─── */
+  .formula{background:#0a0e17;border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:22px 24px;margin:18px 0}
+  .formula-label{font-size:11px;color:#475569;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;font-family:'Inter',sans-serif}
+  .formula-body{font-family:'JetBrains Mono',monospace;font-size:14px;color:#86efac;line-height:2}
+  .formula-note{font-size:12px;color:#475569;margin-top:10px;font-family:'Inter',sans-serif}
+
+  /* ─── COEFFICIENT TABLE MEGA ─── */
+  .coeff-section{margin:28px 0}
+  .coeff-header{display:flex;align-items:center;gap:14px;background:#0f1a12;border:1px solid #1e293b;border-radius:10px 10px 0 0;padding:14px 18px}
+  .coeff-mine-count{font-size:22px;font-weight:900;color:#4ade80}
+  .coeff-title{font-size:15px;font-weight:700;color:#f1f5f9}
+  .coeff-subtitle{font-size:12px;color:#475569}
+  .coeff-edge{margin-left:auto}
+  .coeff-table{width:100%;border-collapse:collapse;border:1px solid #1e293b;border-top:none;border-radius:0 0 10px 10px;overflow:hidden}
+  .coeff-table thead tr{background:#0c1510}
+  .coeff-table th{color:#22c55e;padding:9px 12px;font-size:11px;text-transform:uppercase;letter-spacing:1px;text-align:right;border-bottom:1px solid #1e293b}
+  .coeff-table th:first-child{text-align:left}
+  .coeff-table td{padding:9px 12px;border-bottom:1px solid #0c1510;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px}
+  .coeff-table td:first-child{text-align:left;font-family:'Inter',sans-serif;color:#94a3b8;font-size:12px}
+  .coeff-table .hl{background:rgba(34,197,94,0.06)!important}
+  .coeff-table tr:hover td{background:rgba(34,197,94,0.04)}
+  .risk-lo{font-size:10px;padding:1px 6px;border-radius:6px;background:rgba(34,197,94,0.15);color:#4ade80;font-family:'Inter',sans-serif}
+  .risk-md{font-size:10px;padding:1px 6px;border-radius:6px;background:rgba(251,191,36,0.15);color:#fbbf24;font-family:'Inter',sans-serif}
+  .risk-hi{font-size:10px;padding:1px 6px;border-radius:6px;background:rgba(239,68,68,0.15);color:#f87171;font-family:'Inter',sans-serif}
+
+  .footer{margin-top:96px;padding-top:32px;border-top:1px solid #1e293b;text-align:center;color:#334155;font-size:12px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<div class="cover">
+  <div class="doc-badge">💣 Document 6 of 6 — Game Design</div>
+  <div class="cover-game">💣 &nbsp; Mines Game &nbsp; 💣</div>
+  <div class="cover-title">Complete<br/>Game Doc</div>
+  <div class="cover-sub">Full specification of the Mines game: rules, game states, provably fair math, coefficient tables for all mine counts, risk model, house edge, and implementation code.</div>
+  <div class="cover-chips">
+    <div class="chip chip-g">⬜ 25 Cells Grid</div>
+    <div class="chip chip-g">🎲 Provably Fair</div>
+    <div class="chip chip-r">💣 1–24 Mines</div>
+    <div class="chip">📊 2% House Edge</div>
+    <div class="chip">💎 TON Only</div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE ═══════════════ -->
+<div class="page">
+
+  <!-- §1 GAME OVERVIEW -->
+  <div class="section">
+    <div class="section-label">§ 1</div>
+    <div class="section-title">Game Overview</div>
+    <div class="section-divider"></div>
+    <div class="section-desc">Mines is a grid-based game where the player reveals cells one by one, trying to avoid hidden mines. Each successful reveal increases the multiplier. The player can cash out any time before hitting a mine. It's a game of risk management — the player controls when to stop.</div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num stat-g">5×5</div><div class="stat-label">Grid Size</div></div>
+      <div class="stat-card"><div class="stat-num stat-r">1–24</div><div class="stat-label">Mine Options</div></div>
+      <div class="stat-card"><div class="stat-num stat-o">98%</div><div class="stat-label">RTP</div></div>
+      <div class="stat-card"><div class="stat-num stat-b">2%</div><div class="stat-label">House Edge</div></div>
+      <div class="stat-card"><div class="stat-num stat-p">10K</div><div class="stat-label">Max Payout TON</div></div>
+    </div>
+
+    <h3>How to Play</h3>
+    <ul class="list">
+      <li>Player selects a <strong>bet amount</strong> in TON (min 0.01, max 500 TON)</li>
+      <li>Player selects <strong>mine count</strong> (1, 2, 3, 5, 10, 15, 20, or 24 mines)</li>
+      <li>Player taps <strong>"BET"</strong> — bet is deducted from balance, 25 cells appear hidden</li>
+      <li>Player taps cells to reveal them — each reveal is either 💎 (safe) or 💣 (mine)</li>
+      <li>Each gem increases the <strong>multiplier</strong> — the payout shown updates in real time</li>
+      <li>If player hits a mine → <strong>round lost</strong>, bet forfeited</li>
+      <li>Player can tap <strong>"Cash Out"</strong> at any time after at least 1 gem → payout credited</li>
+    </ul>
+
+    <div class="board-preview">
+      <div class="cell-p cell-gem">💎</div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-gem">💎</div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-mine">💣</div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-gem">💎</div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+      <div class="cell-p cell-hidden"><div class="cell-dot"></div></div>
+    </div>
+    <p style="text-align:center;font-size:12px;color:#334155;margin-top:8px">Example board — 3 mines mode — 3 gems found, 1 mine hit (game over)</p>
+  </div>
+
+  <!-- §2 GAME STATES -->
+  <div class="section">
+    <div class="section-label">§ 2</div>
+    <div class="section-title">Game State Machine</div>
+    <div class="section-divider"></div>
+
+    <div class="flow-row">
+      <div>
+        <div class="flow-box">IDLE</div>
+        <div class="flow-label">No active game</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div>
+        <div class="flow-box state-active">ACTIVE</div>
+        <div class="flow-label">Game in progress</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div>
+          <div class="flow-box state-won">CASHOUT</div>
+          <div class="flow-label">Player cashed out</div>
+        </div>
+        <div>
+          <div class="flow-box state-lost">LOST</div>
+          <div class="flow-label">Hit a mine</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div>
+        <div class="flow-box">IDLE</div>
+        <div class="flow-label">Ready for next game</div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>State</th><th>Allowed Actions</th><th>Balance Effect</th><th>Transition</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-blue">IDLE</span></td><td>Start game (set bet + mine count)</td><td>Bet deducted immediately</td><td>→ ACTIVE</td></tr>
+        <tr><td><span class="badge b-green">ACTIVE</span></td><td>Reveal cell, Cash out, Auto-pick (RANDOM)</td><td>No change during play</td><td>→ CASHOUT or → LOST</td></tr>
+        <tr><td><span class="badge b-orange">CASHOUT</span></td><td>Start new game</td><td>Payout credited to balance</td><td>→ IDLE</td></tr>
+        <tr><td><span class="badge b-red">LOST</span></td><td>Start new game</td><td>Bet already forfeited at start</td><td>→ IDLE</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout c-orange">
+      <p>⚠️ <strong>One active game per user:</strong> The system enforces this via a Redis key <code>session:{userId}:game</code>. Attempting to start a second game while one is ACTIVE returns HTTP 409. The frontend must handle this and show the resumed game board.</p>
+    </div>
+  </div>
+
+  <!-- §3 PROVABLY FAIR -->
+  <div class="section">
+    <div class="section-label">§ 3</div>
+    <div class="section-title">Provably Fair System</div>
+    <div class="section-divider"></div>
+    <div class="section-desc">Every game round is provably fair — meaning the player can independently verify that the mine positions were not manipulated after betting. The three-seed system ensures neither the server nor client can cheat.</div>
+
+    <div class="two-col">
+      <div class="info-card">
+        <h4>Three Seeds</h4>
+        <ul class="list">
+          <li><strong style="color:#f1f5f9">Server Seed</strong> — 32-byte random hex generated per game. NEVER shown until game ends. Prevents server from cheating.</li>
+          <li><strong style="color:#f1f5f9">Server Seed Hash</strong> — SHA-256 of server seed. Shown to player BEFORE game starts. Commits server to the seed.</li>
+          <li><strong style="color:#f1f5f9">Client Seed</strong> — Player-provided (or random). Player can change it before starting. Prevents server from knowing outcome even if they knew client seed.</li>
+          <li><strong style="color:#f1f5f9">Nonce</strong> — Auto-incrementing integer per user. Ensures unique outcomes even with same seeds.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Verification Flow</h4>
+        <ul class="list">
+          <li>Server generates serverSeed, computes serverSeedHash</li>
+          <li>Player sees serverSeedHash + their clientSeed + nonce BEFORE betting</li>
+          <li>Game plays out (mine positions already determined)</li>
+          <li>After game ends, server reveals raw serverSeed</li>
+          <li>Player can now compute HMAC(serverSeed, "clientSeed:nonce") and derive the exact same mine positions independently</li>
+          <li>Open-source verifier tool published at /verify</li>
+        </ul>
+      </div>
+    </div>
+
+    <pre><span class="cmt">// mines.engine.ts — Complete provably fair implementation</span>
+
+<span class="kw">import</span> { createHmac, createHash, randomBytes } <span class="kw">from</span> <span class="str">'crypto'</span>
+
+<span class="cmt">/** Generate cryptographically random server seed */</span>
+<span class="kw">export function</span> <span class="fn">generateServerSeed</span>(): <span class="type">string</span> {
+  <span class="kw">return</span> randomBytes(<span class="num">32</span>).<span class="fn">toString</span>(<span class="str">'hex'</span>)  <span class="cmt">// 64-char hex</span>
+}
+
+<span class="cmt">/** Hash server seed to commit to it before game */</span>
+<span class="kw">export function</span> <span class="fn">hashServerSeed</span>(<span class="prop">seed</span>: <span class="type">string</span>): <span class="type">string</span> {
+  <span class="kw">return</span> createHash(<span class="str">'sha256'</span>).<span class="fn">update</span>(seed).<span class="fn">digest</span>(<span class="str">'hex'</span>)
+}
+
+<span class="cmt">/**
+ * Deterministically derive mine positions from seeds.
+ * Same inputs always produce same outputs — verifiable by anyone.
+ */</span>
+<span class="kw">export function</span> <span class="fn">generateMinePositions</span>(
+  <span class="prop">serverSeed</span>: <span class="type">string</span>,
+  <span class="prop">clientSeed</span>: <span class="type">string</span>,
+  <span class="prop">nonce</span>: <span class="type">number</span>,
+  <span class="prop">mineCount</span>: <span class="type">number</span>
+): <span class="type">number[]</span> {
+  <span class="cmt">// 1. Derive combined hash</span>
+  <span class="kw">const</span> <span class="prop">hash</span> = createHmac(<span class="str">'sha256'</span>, serverSeed)
+    .<span class="fn">update</span>(<span class="str">`</span>${clientSeed}<span class="str">:</span>${nonce}<span class="str">`</span>)
+    .<span class="fn">digest</span>(<span class="str">'hex'</span>)
+
+  <span class="cmt">// 2. Build array of 25 cells [0..24]</span>
+  <span class="kw">const</span> <span class="prop">cells</span> = Array.<span class="fn">from</span>({ length: <span class="num">25</span> }, (_, i) => i)
+
+  <span class="cmt">// 3. Fisher-Yates shuffle using hash bytes as entropy</span>
+  <span class="kw">for</span> (<span class="kw">let</span> <span class="prop">i</span> = <span class="num">24</span>; i > <span class="num">0</span>; i--) {
+    <span class="cmt">// Take 4 bytes from hash at offset i*4, interpret as uint32</span>
+    <span class="kw">const</span> <span class="prop">offset</span> = (i * <span class="num">4</span>) % <span class="num">60</span>
+    <span class="kw">const</span> <span class="prop">val</span> = parseInt(hash.<span class="fn">slice</span>(offset, offset + <span class="num">8</span>), <span class="num">16</span>)
+    <span class="kw">const</span> <span class="prop">j</span> = val % (i + <span class="num">1</span>)
+    ;[cells[i], cells[j]] = [cells[j], cells[i]]
+  }
+
+  <span class="cmt">// 4. First mineCount positions are the mines</span>
+  <span class="kw">return</span> cells.<span class="fn">slice</span>(<span class="num">0</span>, mineCount).<span class="fn">sort</span>((a, b) => a - b)
+}
+<span class="file-tag">modules/games/mines/mines.engine.ts</span></pre>
+  </div>
+
+  <!-- §4 MATH MODEL -->
+  <div class="section">
+    <div class="section-label">§ 4</div>
+    <div class="section-title">Mathematical Model</div>
+    <div class="section-divider"></div>
+
+    <h3>Core Formula</h3>
+    <div class="formula">
+      <div class="formula-label">Combinations</div>
+      <div class="formula-body">C(n, k) = n! / (k! × (n−k)!)</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-label">Win Probability — survive exactly k reveals with m mines in 25 cells</div>
+      <div class="formula-body">P(k, m) = C(25−m, k) / C(25, k)</div>
+      <div class="formula-note">This is the probability that ALL k revealed cells are safe (no mines hit)</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-label">Fair Multiplier (no house edge) — after k safe reveals</div>
+      <div class="formula-body">fair_mult(k, m) = C(25, k) / C(25−m, k) = 1 / P(k, m)</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-label">Applied Multiplier — with 2% house edge</div>
+      <div class="formula-body">mult(k, m) = fair_mult(k, m) × 0.98</div>
+      <div class="formula-note">RTP = 98%. House edge = 2%. Applied uniformly across all depths and mine counts.</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-label">Payout Calculation</div>
+      <div class="formula-body">payout = bet_amount × mult(k, m)</div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-label">Next Cell Safety Probability (shown in UI)</div>
+      <div class="formula-body">P(next_safe | k already revealed) = (25 − m − k) / (25 − k)</div>
+    </div>
+
+    <h3>Worked Example</h3>
+    <p>Player bets <strong>1.00 TON</strong>, mine count = <strong>3</strong>, reveals <strong>5 safe cells</strong>:</p>
+    <table>
+      <thead><tr><th>Step</th><th>Formula</th><th class="right">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Combinations C(25, 5)</td><td>25! / (5! × 20!)</td><td class="right">53,130</td></tr>
+        <tr><td>Combinations C(22, 5)</td><td>22! / (5! × 17!)</td><td class="right">26,334</td></tr>
+        <tr><td>Fair multiplier</td><td>53,130 / 26,334</td><td class="right">2.0177×</td></tr>
+        <tr class="highlight"><td>Applied multiplier</td><td>2.0177 × 0.98</td><td class="right"><strong>1.9773×</strong></td></tr>
+        <tr class="highlight"><td>Payout on 1 TON</td><td>1.00 × 1.9773</td><td class="right"><strong>1.977 TON</strong></td></tr>
+        <tr><td>House profit (expected)</td><td>1.00 × (1 − 0.98) × P(5,3)</td><td class="right">~0.009 TON</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §5 FULL COEFFICIENT TABLES -->
+  <div class="section">
+    <div class="section-label">§ 5</div>
+    <div class="section-title">Complete Coefficient Tables</div>
+    <div class="section-divider"></div>
+    <div class="section-desc">Every multiplier for every mine count, at every reveal depth. <span class="badge b-green">Green multipliers</span> are modest risk. <span class="badge b-orange">Orange</span> are high-risk high-reward. The "Next Safe %" column is what appears in the game UI after each reveal.</div>
+
+    <!-- ── 1 MINE ── -->
+    <div class="coeff-section">
+      <div class="coeff-header">
+        <div class="coeff-mine-count">1</div>
+        <div>
+          <div class="coeff-title">Mine — 24 safe cells available</div>
+          <div class="coeff-subtitle">Lowest risk · Slow multiplier growth · Good for conservative play</div>
+        </div>
+        <div class="coeff-edge"><span class="badge b-green">2% Edge</span></div>
+      </div>
+      <table class="coeff-table">
+        <thead><tr><th>Reveals (k)</th><th class="right">Survive Prob%</th><th class="right">Next Safe%</th><th class="right">Fair Mult</th><th class="right">Applied Mult</th><th class="right">Payout (1 TON)</th><th class="right">Risk</th></tr></thead>
+        <tbody>
+          <tr><td>1st gem</td><td class="right prob-hi">96.00%</td><td class="right prob-hi">95.83%</td><td class="right">1.042×</td><td class="right mx1">1.021×</td><td class="right">1.021 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>2nd gem</td><td class="right prob-hi">92.17%</td><td class="right prob-hi">95.65%</td><td class="right">1.085×</td><td class="right mx1">1.064×</td><td class="right">1.064 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>3rd gem</td><td class="right prob-hi">88.51%</td><td class="right prob-hi">95.45%</td><td class="right">1.130×</td><td class="right mx1">1.107×</td><td class="right">1.107 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>5th gem</td><td class="right prob-hi">81.62%</td><td class="right prob-hi">95.00%</td><td class="right">1.225×</td><td class="right mx1">1.201×</td><td class="right">1.201 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>8th gem</td><td class="right prob-hi">72.00%</td><td class="right prob-hi">94.12%</td><td class="right">1.389×</td><td class="right mx1">1.361×</td><td class="right">1.361 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>10th gem</td><td class="right prob-md">66.67%</td><td class="right prob-hi">93.33%</td><td class="right">1.500×</td><td class="right mx2">1.470×</td><td class="right">1.470 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>12th gem</td><td class="right prob-md">61.54%</td><td class="right prob-md">92.31%</td><td class="right">1.625×</td><td class="right mx2">1.593×</td><td class="right">1.593 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>15th gem</td><td class="right prob-md">54.55%</td><td class="right prob-md">90.00%</td><td class="right">1.833×</td><td class="right mx2">1.797×</td><td class="right">1.797 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>18th gem</td><td class="right prob-lo">46.15%</td><td class="right prob-md">85.71%</td><td class="right">2.167×</td><td class="right mx3">2.123×</td><td class="right">2.123 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>20th gem</td><td class="right prob-lo">40.00%</td><td class="right prob-md">80.00%</td><td class="right">2.500×</td><td class="right mx3">2.450×</td><td class="right">2.450 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>22nd gem</td><td class="right prob-lo">30.77%</td><td class="right prob-lo">66.67%</td><td class="right">3.250×</td><td class="right mx4">3.185×</td><td class="right">3.185 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr class="hl"><td>24th gem (max)</td><td class="right prob-lo">4.17%</td><td class="right">—</td><td class="right">24.00×</td><td class="right mx5">23.520×</td><td class="right">23.52 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── 2 MINES ── -->
+    <div class="coeff-section">
+      <div class="coeff-header">
+        <div class="coeff-mine-count">2</div>
+        <div>
+          <div class="coeff-title">Mines — 23 safe cells available</div>
+          <div class="coeff-subtitle">Low-medium risk · Moderate growth</div>
+        </div>
+        <div class="coeff-edge"><span class="badge b-green">2% Edge</span></div>
+      </div>
+      <table class="coeff-table">
+        <thead><tr><th>Reveals (k)</th><th class="right">Survive Prob%</th><th class="right">Next Safe%</th><th class="right">Fair Mult</th><th class="right">Applied Mult</th><th class="right">Payout (1 TON)</th><th class="right">Risk</th></tr></thead>
+        <tbody>
+          <tr><td>1st gem</td><td class="right prob-hi">92.00%</td><td class="right prob-hi">91.67%</td><td class="right">1.087×</td><td class="right mx1">1.065×</td><td class="right">1.065 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>2nd gem</td><td class="right prob-hi">84.50%</td><td class="right prob-hi">91.30%</td><td class="right">1.183×</td><td class="right mx1">1.159×</td><td class="right">1.159 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>3rd gem</td><td class="right prob-hi">77.48%</td><td class="right prob-hi">90.91%</td><td class="right">1.291×</td><td class="right mx2">1.265×</td><td class="right">1.265 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>5th gem</td><td class="right prob-md">64.12%</td><td class="right prob-hi">90.00%</td><td class="right">1.560×</td><td class="right mx2">1.529×</td><td class="right">1.529 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>8th gem</td><td class="right prob-md">47.06%</td><td class="right prob-md">88.24%</td><td class="right">2.125×</td><td class="right mx2">2.083×</td><td class="right">2.083 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>10th gem</td><td class="right prob-md">36.36%</td><td class="right prob-md">86.67%</td><td class="right">2.750×</td><td class="right mx3">2.695×</td><td class="right">2.695 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>13th gem</td><td class="right prob-lo">22.73%</td><td class="right prob-md">83.33%</td><td class="right">4.400×</td><td class="right mx3">4.312×</td><td class="right">4.312 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>17th gem</td><td class="right prob-lo">9.09%</td><td class="right prob-lo">75.00%</td><td class="right">11.00×</td><td class="right mx4">10.780×</td><td class="right">10.78 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>20th gem</td><td class="right prob-lo">2.86%</td><td class="right prob-lo">60.00%</td><td class="right">35.00×</td><td class="right mx5">34.300×</td><td class="right">34.30 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr class="hl"><td>23rd gem (max)</td><td class="right prob-lo">0.36%</td><td class="right">—</td><td class="right">276.0×</td><td class="right mx5">270.48×</td><td class="right">270.5 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── 3 MINES ── -->
+    <div class="coeff-section">
+      <div class="coeff-header">
+        <div class="coeff-mine-count">3</div>
+        <div>
+          <div class="coeff-title">Mines — 22 safe cells available — <strong style="color:#4ade80">DEFAULT MODE</strong></div>
+          <div class="coeff-subtitle">Balanced risk · Most popular configuration · Shown in UI screenshot</div>
+        </div>
+        <div class="coeff-edge"><span class="badge b-green">2% Edge</span></div>
+      </div>
+      <table class="coeff-table">
+        <thead><tr><th>Reveals (k)</th><th class="right">Survive Prob%</th><th class="right">Next Safe%</th><th class="right">Fair Mult</th><th class="right">Applied Mult</th><th class="right">Payout (1 TON)</th><th class="right">Risk</th></tr></thead>
+        <tbody>
+          <tr><td>1st gem</td><td class="right prob-hi">88.00%</td><td class="right prob-hi">87.50%</td><td class="right">1.136×</td><td class="right mx1">1.114×</td><td class="right">1.114 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>2nd gem</td><td class="right prob-hi">77.04%</td><td class="right prob-hi">87.00%</td><td class="right">1.298×</td><td class="right mx2">1.272×</td><td class="right">1.272 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>3rd gem</td><td class="right prob-md">67.10%</td><td class="right prob-hi">86.36%</td><td class="right">1.490×</td><td class="right mx2">1.460×</td><td class="right">1.460 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>4th gem</td><td class="right prob-md">57.85%</td><td class="right prob-md">85.71%</td><td class="right">1.728×</td><td class="right mx2">1.694×</td><td class="right">1.694 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>5th gem</td><td class="right prob-md">49.37%</td><td class="right prob-md">85.00%</td><td class="right">2.026×</td><td class="right mx2">1.985×</td><td class="right">1.985 TON</td><td class="right"><span class="risk-lo">LOW</span></td></tr>
+          <tr><td>6th gem</td><td class="right prob-lo">41.61%</td><td class="right prob-md">84.21%</td><td class="right">2.403×</td><td class="right mx2">2.355×</td><td class="right">2.355 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>7th gem</td><td class="right prob-lo">34.56%</td><td class="right prob-md">83.33%</td><td class="right">2.894×</td><td class="right mx3">2.836×</td><td class="right">2.836 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>8th gem</td><td class="right prob-lo">28.19%</td><td class="right prob-md">82.35%</td><td class="right">3.547×</td><td class="right mx3">3.476×</td><td class="right">3.476 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>9th gem</td><td class="right prob-lo">22.54%</td><td class="right prob-md">81.25%</td><td class="right">4.437×</td><td class="right mx3">4.348×</td><td class="right">4.348 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>10th gem</td><td class="right prob-lo">17.57%</td><td class="right prob-md">80.00%</td><td class="right">5.690×</td><td class="right mx3">5.576×</td><td class="right">5.576 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>12th gem</td><td class="right prob-lo">9.23%</td><td class="right prob-lo">76.92%</td><td class="right">10.833×</td><td class="right mx4">10.617×</td><td class="right">10.62 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>15th gem</td><td class="right prob-lo">2.45%</td><td class="right prob-lo">70.00%</td><td class="right">40.833×</td><td class="right mx5">40.016×</td><td class="right">40.02 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr class="hl"><td>22nd gem (max)</td><td class="right prob-lo">~0.01%</td><td class="right">—</td><td class="right">~2300×</td><td class="right mx5">~2254×</td><td class="right">~2254 TON*</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── 5 MINES ── -->
+    <div class="coeff-section">
+      <div class="coeff-header">
+        <div class="coeff-mine-count">5</div>
+        <div>
+          <div class="coeff-title">Mines — 20 safe cells available</div>
+          <div class="coeff-subtitle">High risk · Fast multiplier growth · Thrill-seekers</div>
+        </div>
+        <div class="coeff-edge"><span class="badge b-orange">2% Edge · Max bet 100 TON</span></div>
+      </div>
+      <table class="coeff-table">
+        <thead><tr><th>Reveals (k)</th><th class="right">Survive Prob%</th><th class="right">Next Safe%</th><th class="right">Fair Mult</th><th class="right">Applied Mult</th><th class="right">Payout (1 TON)</th><th class="right">Risk</th></tr></thead>
+        <tbody>
+          <tr><td>1st gem</td><td class="right prob-hi">80.00%</td><td class="right prob-md">79.17%</td><td class="right">1.250×</td><td class="right mx2">1.225×</td><td class="right">1.225 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>2nd gem</td><td class="right prob-md">63.16%</td><td class="right prob-md">78.26%</td><td class="right">1.583×</td><td class="right mx2">1.552×</td><td class="right">1.552 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>3rd gem</td><td class="right prob-md">48.28%</td><td class="right prob-md">77.27%</td><td class="right">2.071×</td><td class="right mx2">2.030×</td><td class="right">2.030 TON</td><td class="right"><span class="risk-md">MED</span></td></tr>
+          <tr><td>4th gem</td><td class="right prob-lo">35.38%</td><td class="right prob-md">76.19%</td><td class="right">2.827×</td><td class="right mx3">2.771×</td><td class="right">2.771 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>5th gem</td><td class="right prob-lo">24.55%</td><td class="right prob-md">75.00%</td><td class="right">4.071×</td><td class="right mx3">3.990×</td><td class="right">3.990 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>6th gem</td><td class="right prob-lo">15.90%</td><td class="right prob-lo">73.68%</td><td class="right">6.292×</td><td class="right mx4">6.166×</td><td class="right">6.166 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>7th gem</td><td class="right prob-lo">9.44%</td><td class="right prob-lo">72.22%</td><td class="right">10.591×</td><td class="right mx4">10.379×</td><td class="right">10.38 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr><td>8th gem</td><td class="right prob-lo">5.04%</td><td class="right prob-lo">70.59%</td><td class="right">19.833×</td><td class="right mx5">19.437×</td><td class="right">19.44 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr><td>10th gem</td><td class="right prob-lo">0.83%</td><td class="right prob-lo">66.67%</td><td class="right">120.6×</td><td class="right mx5">118.2×</td><td class="right">118.2 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr class="hl"><td>20th gem (max)</td><td class="right prob-lo">~0%</td><td class="right">—</td><td class="right">~53,130×</td><td class="right mx5">CAP 10K×</td><td class="right">10,000 TON*</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── 10 MINES ── -->
+    <div class="coeff-section">
+      <div class="coeff-header">
+        <div class="coeff-mine-count">10</div>
+        <div>
+          <div class="coeff-title">Mines — 15 safe cells available</div>
+          <div class="coeff-subtitle">Extreme risk · Very fast growth · Max bet 50 TON enforced</div>
+        </div>
+        <div class="coeff-edge"><span class="badge b-red">2% Edge · Max bet 50 TON</span></div>
+      </div>
+      <table class="coeff-table">
+        <thead><tr><th>Reveals (k)</th><th class="right">Survive Prob%</th><th class="right">Next Safe%</th><th class="right">Fair Mult</th><th class="right">Applied Mult</th><th class="right">Payout (1 TON)</th><th class="right">Risk</th></tr></thead>
+        <tbody>
+          <tr><td>1st gem</td><td class="right prob-md">60.00%</td><td class="right prob-lo">58.33%</td><td class="right">1.667×</td><td class="right mx2">1.633×</td><td class="right">1.633 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>2nd gem</td><td class="right prob-lo">35.29%</td><td class="right prob-lo">56.52%</td><td class="right">2.833×</td><td class="right mx3">2.777×</td><td class="right">2.777 TON</td><td class="right"><span class="risk-hi">HIGH</span></td></tr>
+          <tr><td>3rd gem</td><td class="right prob-lo">19.05%</td><td class="right prob-lo">54.55%</td><td class="right">5.250×</td><td class="right mx3">5.145×</td><td class="right">5.145 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr><td>4th gem</td><td class="right prob-lo">9.28%</td><td class="right prob-lo">52.38%</td><td class="right">10.778×</td><td class="right mx4">10.562×</td><td class="right">10.56 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr><td>5th gem</td><td class="right prob-lo">3.96%</td><td class="right prob-lo">50.00%</td><td class="right">25.250×</td><td class="right mx4">24.745×</td><td class="right">24.75 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr><td>6th gem</td><td class="right prob-lo">1.44%</td><td class="right prob-lo">47.37%</td><td class="right">69.444×</td><td class="right mx5">68.055×</td><td class="right">68.06 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr><td>7th gem</td><td class="right prob-lo">0.43%</td><td class="right prob-lo">44.44%</td><td class="right">231.5×</td><td class="right mx5">226.8×</td><td class="right">226.8 TON</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+          <tr class="hl"><td>8th+ (capped)</td><td class="right prob-lo">&lt;0.2%</td><td class="right">—</td><td class="right">1000+×</td><td class="right mx5">CAP 10K×</td><td class="right">10,000 TON*</td><td class="right"><span class="risk-hi">EXTREME</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout c-red">
+      <p>* <strong>10,000 TON Payout Cap:</strong> Applied at 5+ mines beyond depth 7. When the theoretical multiplier would exceed the cap, the displayed multiplier is capped. Players are shown the cap prominently before starting high-mine-count games. This protects the house from catastrophic single-round losses during low-liquidity periods.</p>
+    </div>
+  </div>
+
+  <!-- §6 MINE COUNT COMPARISON -->
+  <div class="section">
+    <div class="section-label">§ 6</div>
+    <div class="section-title">Mine Count Comparison</div>
+    <div class="section-divider"></div>
+    <div class="section-desc">Quick reference for choosing mine count — shows first-reveal probability, multiplier after 3 reveals, and probability of reaching 5 gems safely.</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mines</th>
+          <th class="right">1st reveal safe%</th>
+          <th class="right">After 3 gems mult</th>
+          <th class="right">Reach 5 gems prob</th>
+          <th class="right">Max mult (capped)</th>
+          <th>Player Profile</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td class="right prob-hi">96.0%</td><td class="right mx1">1.107×</td><td class="right prob-hi">81.6%</td><td class="right">23.52×</td><td>Conservative / new players</td></tr>
+        <tr><td><strong>2</strong></td><td class="right prob-hi">92.0%</td><td class="right mx1">1.265×</td><td class="right prob-hi">64.1%</td><td class="right">270.5×</td><td>Balanced / casual</td></tr>
+        <tr class="highlight"><td><strong>3 ⭐</strong></td><td class="right prob-hi">88.0%</td><td class="right mx2">1.460×</td><td class="right prob-md">49.4%</td><td class="right">2254×*</td><td>Default / most popular</td></tr>
+        <tr><td><strong>5</strong></td><td class="right prob-md">80.0%</td><td class="right mx2">2.030×</td><td class="right prob-md">24.6%</td><td class="right">CAP 10K</td><td>Aggressive / thrill-seekers</td></tr>
+        <tr><td><strong>10</strong></td><td class="right prob-md">60.0%</td><td class="right mx3">5.145×</td><td class="right prob-lo">3.96%</td><td class="right">CAP 10K</td><td>High-risk gamblers</td></tr>
+        <tr><td><strong>15</strong></td><td class="right prob-lo">40.0%</td><td class="right mx4">11.88×</td><td class="right prob-lo">0.34%</td><td class="right">CAP 10K</td><td>Jackpot hunters</td></tr>
+        <tr><td><strong>20</strong></td><td class="right prob-lo">20.0%</td><td class="right mx5">52.0×</td><td class="right prob-lo">&lt;0.01%</td><td class="right">CAP 10K</td><td>Lottery mentality</td></tr>
+        <tr><td><strong>24</strong></td><td class="right prob-lo">4.0%</td><td class="right mx5">CAP</td><td class="right prob-lo">&lt;0.001%</td><td class="right">CAP 10K</td><td>Pure gamble</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §7 UI ELEMENTS -->
+  <div class="section">
+    <div class="section-label">§ 7</div>
+    <div class="section-title">UI Elements &amp; Features</div>
+    <div class="section-divider"></div>
+
+    <div class="two-col">
+      <div class="info-card">
+        <h4>Game Controls</h4>
+        <ul class="list">
+          <li><strong>Bet Amount</strong> — numeric input with − / + buttons. Quick-select: ½× and 2× buttons. Min 0.01 TON.</li>
+          <li><strong>Mine Count Selector</strong> — horizontal pill buttons: 1, 2, 3, 5, 10, 15, 20, 24</li>
+          <li><strong>BET Button</strong> — large CTA, becomes "CASH OUT" after first gem reveal</li>
+          <li><strong>RANDOM Button</strong> — auto-picks a random unrevealed safe cell (if possible)</li>
+          <li><strong>Auto Game</strong> — toggle: plays with same settings automatically (optional feature)</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Live Info Display</h4>
+        <ul class="list">
+          <li><strong>Next: X.XXx</strong> — shows the multiplier the NEXT safe reveal would give</li>
+          <li><strong>Mines: N</strong> — mine count reminder</li>
+          <li><strong>Current Payout</strong> — real-time: bet × current multiplier in TON</li>
+          <li><strong>serverSeedHash</strong> — shown in footer before betting, collapsed by default</li>
+          <li><strong>Balance</strong> — top-right, updates instantly after cashout</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="info-card">
+        <h4>Cell States & Animations</h4>
+        <ul class="list">
+          <li><strong>Hidden</strong> — dark blue gradient, subtle center dot</li>
+          <li><strong>Tapped (loading)</strong> — pulse animation, 150ms</li>
+          <li><strong>Gem revealed</strong> — green glow + 💎 bounce-in + haptic</li>
+          <li><strong>Mine hit</strong> — red flash + 💣 + board shake + all mines revealed</li>
+          <li><strong>Cashout</strong> — all safe cells flip to 💎, confetti burst</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Modals & Feedback</h4>
+        <ul class="list">
+          <li><strong>Game Over Modal</strong> — shows bet lost, mine positions, "Play Again" CTA</li>
+          <li><strong>Win Modal</strong> — shows payout, profit, new multiplier record</li>
+          <li><strong>Verify Modal</strong> — serverSeed + link to verifier after game</li>
+          <li><strong>Insufficient Balance</strong> — inline error, link to deposit</li>
+          <li><strong>Haptic feedback</strong> — Telegram SDK: light on reveal, heavy on mine, success on cashout</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- §8 RISK -->
+  <div class="section">
+    <div class="section-label">§ 8</div>
+    <div class="section-title">House Risk Model</div>
+    <div class="section-divider"></div>
+
+    <h3>Expected Value Per Bet</h3>
+    <div class="formula">
+      <div class="formula-label">House Expected Value per bet</div>
+      <div class="formula-body">EV_house = bet × 0.02</div>
+      <div class="formula-note">Regardless of mine count or how many cells revealed — house always earns 2% in expectation</div>
+    </div>
+
+    <h3>Variance by Mine Count</h3>
+    <p>Higher mine count = higher variance = house faces more risk from lucky runs, but same long-run EV. The payout cap and bet limits compensate for short-run variance at extreme mine counts.</p>
+
+    <table>
+      <thead><tr><th>Mines</th><th>Variance Level</th><th>Max Single Loss (house)</th><th>Max Bet Allowed</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>1–2</td><td><span class="badge b-green">Low</span></td><td>~270 TON on 1 TON bet</td><td>500 TON</td><td>None needed</td></tr>
+        <tr><td>3–4</td><td><span class="badge b-blue">Medium</span></td><td>~2,254 TON on 1 TON bet</td><td>500 TON</td><td>10K TON payout cap</td></tr>
+        <tr><td>5–9</td><td><span class="badge b-orange">High</span></td><td>CAP</td><td>100 TON</td><td>Payout cap + reduced max bet</td></tr>
+        <tr><td>10–24</td><td><span class="badge b-red">Extreme</span></td><td>CAP</td><td>50 TON</td><td>Payout cap + aggressive bet limit</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Revenue Projection</h3>
+    <table>
+      <thead><tr><th>Volume</th><th>Avg Bet</th><th>Daily Bets</th><th>House Edge</th><th>Daily Revenue</th></tr></thead>
+      <tbody>
+        <tr><td>MVP (100 users)</td><td>0.5 TON</td><td>2,000</td><td>2%</td><td>20 TON/day</td></tr>
+        <tr><td>Growth (1K users)</td><td>0.8 TON</td><td>20,000</td><td>2%</td><td>320 TON/day</td></tr>
+        <tr class="highlight"><td>Scale (10K users)</td><td>1.0 TON</td><td>200,000</td><td>2%</td><td>4,000 TON/day</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout c-green">
+      <p>💡 <strong>Reserve Fund Rule:</strong> The smart contract must always hold ≥ 110% of total user balances. If it drops below 105%, deposits and new bets are automatically paused until liquidity is restored. This ensures every player can always withdraw their balance in full.</p>
+    </div>
+  </div>
+
+  <div class="footer">TON Casino — Mines Game Complete Documentation — v1.0.0 — March 2026</div>
+</div>
+</body>
+</html>

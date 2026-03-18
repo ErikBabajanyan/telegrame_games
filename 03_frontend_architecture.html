@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TON Casino — Frontend Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#0d1117;color:#e6edf3;font-size:14px;line-height:1.7}
+  .cover{background:linear-gradient(135deg,#0d1117 0%,#0f1d2e 50%,#0a1a0f 100%);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 40px;position:relative}
+  .cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,255,136,0.1) 0%,transparent 60%)}
+  .logo-badge{background:linear-gradient(135deg,#00c888,#0088ff);padding:14px 28px;border-radius:50px;font-size:13px;font-weight:700;letter-spacing:3px;color:#fff;margin-bottom:40px}
+  .cover h1{font-size:clamp(32px,5vw,64px);font-weight:800;line-height:1.1;margin-bottom:20px;background:linear-gradient(135deg,#fff 0%,#88ffcc 50%,#0088ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover p{font-size:18px;color:#8b949e;max-width:600px;margin-bottom:40px}
+  .meta-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+  .meta-pill{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:50px;padding:10px 22px;font-size:13px;color:#cdd9e5}
+  .page{max-width:1000px;margin:0 auto;padding:80px 40px}
+  h2{font-size:26px;font-weight:700;color:#fff;margin-bottom:6px;margin-top:64px;padding-bottom:10px;border-bottom:2px solid #0f2e1a}
+  h2:first-child{margin-top:0}
+  .h2-num{color:#00c888}
+  h3{font-size:17px;font-weight:600;color:#cdd9e5;margin-top:28px;margin-bottom:10px}
+  h4{font-size:13px;font-weight:700;color:#00c888;text-transform:uppercase;letter-spacing:1px;margin-top:20px;margin-bottom:8px}
+  p{color:#8b949e;margin-bottom:14px;font-size:14px}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#161b22;border:1px solid #30363d;padding:2px 7px;border-radius:4px;color:#79c0ff}
+  pre{font-family:'JetBrains Mono',monospace;font-size:12px;background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:20px;overflow-x:auto;color:#e6edf3;line-height:1.7;margin:16px 0}
+  .kw{color:#ff7b72}
+  .str{color:#a5d6ff}
+  .cmt{color:#6e7681}
+  .fn{color:#d2a8ff}
+  .num-c{color:#ffa657}
+  .prop{color:#79c0ff}
+  table{width:100%;border-collapse:collapse;margin:20px 0}
+  th{background:#0f2e1a;color:#00c888;padding:10px 14px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+  td{padding:10px 14px;border-bottom:1px solid #21262d;color:#cdd9e5;font-size:13px}
+  .callout{background:linear-gradient(135deg,rgba(0,200,136,0.08),rgba(0,136,255,0.05));border:1px solid rgba(0,200,136,0.25);border-radius:12px;padding:20px;margin:16px 0}
+  .callout p{margin:0;color:#cdd9e5}
+  ul{list-style:none;padding:0;margin:12px 0}
+  ul li{padding:7px 0;padding-left:18px;position:relative;color:#8b949e;border-bottom:1px solid #21262d;font-size:13px}
+  ul li::before{content:'→';position:absolute;left:0;color:#00c888}
+  /* Architecture Diagram */
+  .arch-diagram{background:#0d1117;border:1px solid #30363d;border-radius:16px;padding:32px;margin:24px 0;overflow-x:auto}
+  .arch-row{display:flex;gap:12px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+  .arch-box{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 16px;text-align:center;min-width:120px}
+  .arch-box.green{border-color:#00c888;background:rgba(0,200,136,0.08)}
+  .arch-box.blue{border-color:#0088ff;background:rgba(0,136,255,0.08)}
+  .arch-box.yellow{border-color:#ffa500;background:rgba(255,165,0,0.08)}
+  .arch-box.purple{border-color:#7800ff;background:rgba(120,0,255,0.08)}
+  .arch-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .arch-title.green{color:#00c888}
+  .arch-title.blue{color:#0088ff}
+  .arch-title.yellow{color:#ffa500}
+  .arch-title.purple{color:#7800ff}
+  .arch-name{font-size:13px;font-weight:600;color:#fff}
+  .arch-sub{font-size:10px;color:#8b949e;margin-top:3px}
+  .arch-arrow{display:flex;justify-content:center;color:#30363d;font-size:22px;margin:2px 0}
+  .arch-divider{width:100%;border-top:1px dashed #30363d;margin:12px 0;position:relative}
+  .arch-divider-label{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#0d1117;padding:0 10px;font-size:10px;color:#8b949e}
+  /* File tree */
+  .file-tree{background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:20px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;margin:16px 0}
+  .ft-dir{color:#79c0ff}
+  .ft-file{color:#e6edf3}
+  .ft-cmt{color:#6e7681}
+  .ft-indent1{padding-left:20px}
+  .ft-indent2{padding-left:40px}
+  .ft-indent3{padding-left:60px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+  .badge-green{background:rgba(0,200,136,0.2);color:#00c888}
+  .badge-blue{background:rgba(0,136,255,0.2);color:#0088ff}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="logo-badge">⚛️ Document 3 of 4 — Frontend</div>
+  <h1>Frontend<br/>Architecture</h1>
+  <p>React + TypeScript + Vite · Telegram Mini App · TON Connect · State Management · Component Hierarchy</p>
+  <div class="meta-row">
+    <div class="meta-pill">⚛️ React 18</div>
+    <div class="meta-pill">📘 TypeScript 5</div>
+    <div class="meta-pill">⚡ Vite</div>
+    <div class="meta-pill">🔗 TON Connect 2.0</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- §1 Overview -->
+  <h2><span class="h2-num">§1.</span> Architecture Overview</h2>
+  <p>The frontend is a single-page React application running inside Telegram's Mini App WebView. It communicates with the backend REST API, handles real-time game state via WebSockets, and manages TON wallet connections through TON Connect 2.0.</p>
+
+  <div class="arch-diagram">
+    <div class="arch-row">
+      <div class="arch-box blue">
+        <div class="arch-title blue">Telegram</div>
+        <div class="arch-name">WebView Host</div>
+        <div class="arch-sub">Provides Auth Token</div>
+      </div>
+      <div class="arch-box purple">
+        <div class="arch-title purple">TON Wallet</div>
+        <div class="arch-name">Tonkeeper / TON Space</div>
+        <div class="arch-sub">Signs Transactions</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕</div>
+    <div class="arch-row">
+      <div class="arch-box green">
+        <div class="arch-title green">React App (SPA)</div>
+        <div class="arch-name">UI Layer</div>
+        <div class="arch-sub">Pages, Components, Hooks</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕</div>
+    <div class="arch-row">
+      <div class="arch-box yellow">
+        <div class="arch-title yellow">State Layer</div>
+        <div class="arch-name">Zustand Stores</div>
+        <div class="arch-sub">user · wallet · game · bets</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕</div>
+    <div class="arch-row">
+      <div class="arch-box blue">
+        <div class="arch-title blue">Network Layer</div>
+        <div class="arch-name">API Client + WebSocket</div>
+        <div class="arch-sub">REST calls · Real-time game events</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↕</div>
+    <div class="arch-row">
+      <div class="arch-box">
+        <div class="arch-title" style="color:#8b949e">Backend</div>
+        <div class="arch-name">Fastify API</div>
+        <div class="arch-sub">:3000 / wss://</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §2 Project Structure -->
+  <h2><span class="h2-num">§2.</span> Project Structure</h2>
+  <div class="file-tree">
+<span class="ft-dir">src/</span><br/>
+<span class="ft-indent1 ft-dir">pages/</span>           <span class="ft-cmt">← Route-level screens</span><br/>
+<span class="ft-indent2 ft-file">Lobby.tsx</span>       <span class="ft-cmt">← Game grid, home screen</span><br/>
+<span class="ft-indent2 ft-file">MinesGame.tsx</span>   <span class="ft-cmt">← Full mines game screen</span><br/>
+<span class="ft-indent2 ft-file">Wallet.tsx</span>      <span class="ft-cmt">← Balance, deposit/withdraw</span><br/>
+<span class="ft-indent2 ft-file">Bets.tsx</span>        <span class="ft-cmt">← Bet history</span><br/>
+<span class="ft-indent2 ft-file">Profile.tsx</span>     <span class="ft-cmt">← User settings, limits</span><br/>
+<br/>
+<span class="ft-indent1 ft-dir">components/</span><br/>
+<span class="ft-indent2 ft-dir">layout/</span><br/>
+<span class="ft-indent3 ft-file">BottomNav.tsx</span>   <span class="ft-cmt">← 4-tab navigation</span><br/>
+<span class="ft-indent3 ft-file">GameHeader.tsx</span>  <span class="ft-cmt">← Back btn, balance display</span><br/>
+<span class="ft-indent2 ft-dir">games/</span><br/>
+<span class="ft-indent3 ft-file">MinesBoard.tsx</span>  <span class="ft-cmt">← 5×5 grid component</span><br/>
+<span class="ft-indent3 ft-file">MinesCell.tsx</span>   <span class="ft-cmt">← Individual cell w/ states</span><br/>
+<span class="ft-indent3 ft-file">MinesControls.tsx</span> <span class="ft-cmt">← Bet, mine count, bet btn</span><br/>
+<span class="ft-indent2 ft-dir">wallet/</span><br/>
+<span class="ft-indent3 ft-file">ConnectWallet.tsx</span> <span class="ft-cmt">← TON Connect modal</span><br/>
+<span class="ft-indent3 ft-file">BalancePill.tsx</span> <span class="ft-cmt">← Header balance display</span><br/>
+<span class="ft-indent3 ft-file">DepositModal.tsx</span><br/>
+<span class="ft-indent3 ft-file">WithdrawModal.tsx</span><br/>
+<span class="ft-indent2 ft-dir">ui/</span>             <span class="ft-cmt">← Generic UI primitives</span><br/>
+<span class="ft-indent3 ft-file">Button.tsx</span><br/>
+<span class="ft-indent3 ft-file">Modal.tsx</span><br/>
+<span class="ft-indent3 ft-file">Toast.tsx</span><br/>
+<span class="ft-indent3 ft-file">Spinner.tsx</span><br/>
+<br/>
+<span class="ft-indent1 ft-dir">stores/</span>          <span class="ft-cmt">← Zustand state stores</span><br/>
+<span class="ft-indent2 ft-file">useUserStore.ts</span>  <span class="ft-cmt">← Telegram user, auth token</span><br/>
+<span class="ft-indent2 ft-file">useWalletStore.ts</span> <span class="ft-cmt">← TON wallet, balance</span><br/>
+<span class="ft-indent2 ft-file">useMinesStore.ts</span> <span class="ft-cmt">← Active game state</span><br/>
+<span class="ft-indent2 ft-file">useBetStore.ts</span>   <span class="ft-cmt">← Bet history cache</span><br/>
+<br/>
+<span class="ft-indent1 ft-dir">hooks/</span><br/>
+<span class="ft-indent2 ft-file">useTelegram.ts</span>   <span class="ft-cmt">← Telegram SDK wrapper</span><br/>
+<span class="ft-indent2 ft-file">useTonConnect.ts</span> <span class="ft-cmt">← Wallet connection hook</span><br/>
+<span class="ft-indent2 ft-file">useMinesGame.ts</span>  <span class="ft-cmt">← Core game logic hook</span><br/>
+<span class="ft-indent2 ft-file">useWebSocket.ts</span>  <span class="ft-cmt">← WS connection manager</span><br/>
+<br/>
+<span class="ft-indent1 ft-dir">api/</span><br/>
+<span class="ft-indent2 ft-file">client.ts</span>        <span class="ft-cmt">← Axios instance + interceptors</span><br/>
+<span class="ft-indent2 ft-file">auth.ts</span>          <span class="ft-cmt">← Login, refresh token</span><br/>
+<span class="ft-indent2 ft-file">games.ts</span>         <span class="ft-cmt">← Start/reveal/cashout</span><br/>
+<span class="ft-indent2 ft-file">wallet.ts</span>        <span class="ft-cmt">← Deposit, withdraw, balance</span><br/>
+<br/>
+<span class="ft-indent1 ft-dir">utils/</span><br/>
+<span class="ft-indent2 ft-file">provablyFair.ts</span>  <span class="ft-cmt">← Client-side verification</span><br/>
+<span class="ft-indent2 ft-file">formatTon.ts</span>     <span class="ft-cmt">← TON/nanoton formatting</span><br/>
+<span class="ft-indent2 ft-file">haptics.ts</span>       <span class="ft-cmt">← Telegram haptic feedback</span><br/>
+<br/>
+<span class="ft-indent1 ft-file">App.tsx</span>          <span class="ft-cmt">← Router, providers</span><br/>
+<span class="ft-indent1 ft-file">main.tsx</span>         <span class="ft-cmt">← Entry point, TG SDK init</span><br/>
+  </div>
+
+  <!-- §3 State Management -->
+  <h2><span class="h2-num">§3.</span> State Management (Zustand)</h2>
+  <p>Four distinct Zustand stores handle different domains of state. Stores are persisted to <code>sessionStorage</code> where appropriate.</p>
+
+  <h3>Mines Game Store</h3>
+  <pre><span class="cmt">// stores/useMinesStore.ts</span>
+<span class="kw">interface</span> <span class="fn">MinesState</span> {
+  <span class="cmt">// Active game session</span>
+  <span class="prop">gameId</span>: <span class="str">string | null</span>
+  <span class="prop">status</span>: <span class="str">'idle' | 'active' | 'won' | 'lost'</span>
+  <span class="prop">mineCount</span>: <span class="num-c">1</span> | <span class="num-c">2</span> | <span class="num-c">3</span> | <span class="num-c">5</span> | <span class="num-c">10</span> | <span class="num-c">24</span>
+  <span class="prop">betAmount</span>: <span class="str">number</span>          <span class="cmt">// in nanoTON</span>
+  <span class="prop">cells</span>: <span class="fn">CellState</span>[]         <span class="cmt">// 25 cells, indices 0-24</span>
+  <span class="prop">revealedCount</span>: <span class="str">number</span>
+  <span class="prop">currentMultiplier</span>: <span class="str">number</span>
+  <span class="prop">currentPayout</span>: <span class="str">number</span>     <span class="cmt">// betAmount * multiplier</span>
+  <span class="prop">serverSeedHash</span>: <span class="str">string</span>    <span class="cmt">// shown before game starts</span>
+  <span class="prop">clientSeed</span>: <span class="str">string</span>
+  <span class="prop">nonce</span>: <span class="str">number</span>
+
+  <span class="cmt">// Actions</span>
+  <span class="fn">startGame</span>: (<span class="prop">bet</span>: <span class="str">number</span>, <span class="prop">mines</span>: <span class="str">number</span>) =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">revealCell</span>: (<span class="prop">index</span>: <span class="str">number</span>) =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">cashOut</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="fn">reset</span>: () =&gt; <span class="str">void</span>
+}
+
+<span class="kw">type</span> <span class="fn">CellState</span> = {
+  <span class="prop">index</span>: <span class="str">number</span>
+  <span class="prop">status</span>: <span class="str">'hidden' | 'gem' | 'mine'</span>
+  <span class="prop">revealedAt</span>: <span class="str">number | null</span>  <span class="cmt">// timestamp</span>
+}</pre>
+
+  <h3>Wallet Store</h3>
+  <pre><span class="kw">interface</span> <span class="fn">WalletState</span> {
+  <span class="prop">isConnected</span>: <span class="str">boolean</span>
+  <span class="prop">address</span>: <span class="str">string | null</span>         <span class="cmt">// TON wallet address</span>
+  <span class="prop">internalBalance</span>: <span class="str">number</span>       <span class="cmt">// in nanoTON (casino balance)</span>
+  <span class="prop">tonBalance</span>: <span class="str">number</span>            <span class="cmt">// on-chain TON balance</span>
+  <span class="prop">walletName</span>: <span class="str">string | null</span>     <span class="cmt">// "Tonkeeper", "TON Space", etc.</span>
+  <span class="prop">connect</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="prop">disconnect</span>: () =&gt; <span class="str">void</span>
+  <span class="prop">refreshBalance</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="prop">deposit</span>: (<span class="prop">amount</span>: <span class="str">number</span>) =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+  <span class="prop">withdraw</span>: (<span class="prop">amount</span>: <span class="str">number</span>) =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+}</pre>
+
+  <!-- §4 Game Flow -->
+  <h2><span class="h2-num">§4.</span> Mines Game Flow</h2>
+
+  <table>
+    <tr><th>Step</th><th>User Action</th><th>Frontend Action</th><th>API Call</th></tr>
+    <tr><td>1</td><td>Set bet amount + mine count</td><td>Update store: betAmount, mineCount</td><td>—</td></tr>
+    <tr><td>2</td><td>Tap "BET"</td><td>Validate balance ≥ betAmount; call startGame()</td><td>POST /api/games/mines/start</td></tr>
+    <tr><td>3</td><td>—</td><td>Receive gameId, serverSeedHash; render 25 hidden cells</td><td>Response: {gameId, serverSeedHash}</td></tr>
+    <tr><td>4</td><td>Tap a cell</td><td>Mark cell as loading; call revealCell(index)</td><td>POST /api/games/mines/reveal</td></tr>
+    <tr><td>5a</td><td>—</td><td>Cell is GEM → animate, update multiplier, show cashout</td><td>Response: {result: 'gem', multiplier}</td></tr>
+    <tr><td>5b</td><td>—</td><td>Cell is MINE → shake, reveal all mines, game over modal</td><td>Response: {result: 'mine', minePositions}</td></tr>
+    <tr><td>6</td><td>Tap "Cash Out"</td><td>Show confirmation; call cashOut()</td><td>POST /api/games/mines/cashout</td></tr>
+    <tr><td>7</td><td>—</td><td>Confetti, update balance, reveal server seed for verification</td><td>Response: {payout, serverSeed}</td></tr>
+  </table>
+
+  <!-- §5 TON Connect -->
+  <h2><span class="h2-num">§5.</span> TON Connect Integration</h2>
+
+  <pre><span class="cmt">// hooks/useTonConnect.ts</span>
+<span class="kw">import</span> { <span class="prop">TonConnectUI</span> } <span class="kw">from</span> <span class="str">'@tonconnect/ui-react'</span>
+
+<span class="kw">const</span> <span class="prop">tonConnectUI</span> = <span class="kw">new</span> <span class="fn">TonConnectUI</span>({
+  <span class="prop">manifestUrl</span>: <span class="str">'https://toncasino.app/tonconnect-manifest.json'</span>,
+  <span class="prop">actionsConfiguration</span>: {
+    <span class="prop">twaReturnUrl</span>: <span class="str">'https://t.me/TonCasinoBot/app'</span>  <span class="cmt">// Deep link back to TG</span>
+  }
+})
+
+<span class="cmt">// Deposit: send TON to escrow contract</span>
+<span class="kw">async function</span> <span class="fn">sendDeposit</span>(<span class="prop">amountNano</span>: <span class="str">bigint</span>) {
+  <span class="kw">await</span> <span class="prop">tonConnectUI</span>.<span class="fn">sendTransaction</span>({
+    <span class="prop">validUntil</span>: Math.<span class="fn">floor</span>(Date.<span class="fn">now</span>() / <span class="num-c">1000</span>) + <span class="num-c">600</span>,
+    <span class="prop">messages</span>: [{
+      <span class="prop">address</span>: <span class="str">ESCROW_CONTRACT_ADDRESS</span>,
+      <span class="prop">amount</span>: amountNano.<span class="fn">toString</span>(),
+      <span class="prop">payload</span>: <span class="fn">buildDepositPayload</span>(<span class="prop">userId</span>)  <span class="cmt">// BOC with userId</span>
+    }]
+  })
+}</pre>
+
+  <!-- §6 WebSocket -->
+  <h2><span class="h2-num">§6.</span> WebSocket (Real-time Events)</h2>
+  <p>A persistent WebSocket connection carries game events and balance updates, avoiding polling.</p>
+
+  <table>
+    <tr><th>Event</th><th>Direction</th><th>Payload</th></tr>
+    <tr><td>game:cell_revealed</td><td>Server → Client</td><td>{cellIndex, result, multiplier, payout}</td></tr>
+    <tr><td>game:over</td><td>Server → Client</td><td>{reason, minePositions, serverSeed}</td></tr>
+    <tr><td>wallet:balance_updated</td><td>Server → Client</td><td>{balance: nanoTON}</td></tr>
+    <tr><td>wallet:deposit_confirmed</td><td>Server → Client</td><td>{txHash, amount}</td></tr>
+    <tr><td>ping</td><td>Client → Server</td><td>{ts}</td></tr>
+  </table>
+
+  <!-- §7 Dependencies -->
+  <h2><span class="h2-num">§7.</span> Dependencies</h2>
+  <table>
+    <tr><th>Package</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td>react</td><td>^18.3</td><td>UI framework</td></tr>
+    <tr><td>react-router-dom</td><td>^6</td><td>SPA routing</td></tr>
+    <tr><td>zustand</td><td>^4</td><td>State management</td></tr>
+    <tr><td>@tonconnect/ui-react</td><td>^2</td><td>TON wallet connection</td></tr>
+    <tr><td>@twa-dev/sdk</td><td>^latest</td><td>Telegram Mini App SDK types</td></tr>
+    <tr><td>axios</td><td>^1</td><td>HTTP client</td></tr>
+    <tr><td>framer-motion</td><td>^11</td><td>Cell reveal animations</td></tr>
+    <tr><td>canvas-confetti</td><td>^1</td><td>Win celebration effect</td></tr>
+    <tr><td>vite</td><td>^5</td><td>Build tool</td></tr>
+    <tr><td>typescript</td><td>^5</td><td>Type safety</td></tr>
+  </table>
+
+  <div class="callout">
+    <p>🔒 <strong>Security note:</strong> The Telegram <code>initData</code> string (signed by Telegram) is sent as a Bearer token on every API request. The backend verifies the HMAC-SHA256 signature against the bot token. This prevents forged user identities without requiring separate login.</p>
+  </div>
+
+  <div style="margin-top:80px;padding-top:40px;border-top:1px solid #30363d;text-align:center;color:#8b949e;font-size:13px">
+    TON Casino — Frontend Architecture — v1.0.0 — March 2026
+  </div>
+</div>
+</body>
+</html>

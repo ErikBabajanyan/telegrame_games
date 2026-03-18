@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TON Casino — Full Website Description</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#0d1117;color:#e6edf3;line-height:1.7;font-size:15px}
+  .cover{background:linear-gradient(135deg,#0d1117 0%,#1a2744 50%,#0d2137 100%);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 40px;position:relative;overflow:hidden}
+  .cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,136,255,0.15) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(0,200,136,0.1) 0%,transparent 60%)}
+  .logo-badge{background:linear-gradient(135deg,#0088ff,#00c888);padding:16px 32px;border-radius:50px;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:40px;color:#fff}
+  .cover h1{font-size:clamp(36px,5vw,72px);font-weight:800;line-height:1.1;margin-bottom:24px;background:linear-gradient(135deg,#ffffff 0%,#88ccff 50%,#00c888 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover p{font-size:20px;color:#8b949e;max-width:600px;margin-bottom:48px}
+  .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:700px;width:100%}
+  .meta-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:20px;text-align:center}
+  .meta-card .label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#8b949e;margin-bottom:8px}
+  .meta-card .value{font-size:16px;font-weight:600;color:#fff}
+  .page{max-width:900px;margin:0 auto;padding:80px 40px}
+  h2{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px;padding-bottom:12px;border-bottom:2px solid #1a2744;margin-top:64px}
+  h2:first-child{margin-top:0}
+  h2 span{color:#0088ff}
+  h3{font-size:20px;font-weight:600;color:#cdd9e5;margin-top:36px;margin-bottom:12px}
+  h4{font-size:15px;font-weight:600;color:#0088ff;margin-top:24px;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  p{color:#8b949e;margin-bottom:16px}
+  .highlight{color:#e6edf3}
+  .callout{background:linear-gradient(135deg,rgba(0,136,255,0.1),rgba(0,200,136,0.05));border:1px solid rgba(0,136,255,0.3);border-radius:12px;padding:24px;margin:24px 0}
+  .callout p{margin:0;color:#cdd9e5}
+  .game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:20px}
+  .game-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;text-align:center;transition:border-color 0.2s}
+  .game-card.active{border-color:#0088ff}
+  .game-card.soon{opacity:0.5}
+  .game-icon{font-size:36px;margin-bottom:12px}
+  .game-name{font-size:15px;font-weight:600;color:#fff;margin-bottom:6px}
+  .game-status{font-size:11px;padding:3px 10px;border-radius:20px;display:inline-block}
+  .status-live{background:rgba(0,200,136,0.2);color:#00c888}
+  .status-soon{background:rgba(255,165,0,0.2);color:#ffa500}
+  table{width:100%;border-collapse:collapse;margin:20px 0}
+  th{background:#1a2744;color:#0088ff;padding:12px 16px;text-align:left;font-size:13px;text-transform:uppercase;letter-spacing:1px}
+  td{padding:12px 16px;border-bottom:1px solid #21262d;color:#cdd9e5;font-size:14px}
+  tr:hover td{background:rgba(255,255,255,0.02)}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+  .badge-blue{background:rgba(0,136,255,0.2);color:#0088ff}
+  .badge-green{background:rgba(0,200,136,0.2);color:#00c888}
+  .badge-orange{background:rgba(255,165,0,0.2);color:#ffa500}
+  .flow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}
+  .flow-step{background:#1a2744;border:1px solid #0088ff;border-radius:8px;padding:12px 20px;color:#fff;font-size:14px;font-weight:500;white-space:nowrap}
+  .flow-arrow{color:#0088ff;font-size:20px}
+  ul{list-style:none;padding:0;margin:16px 0}
+  ul li{padding:8px 0;padding-left:20px;position:relative;color:#8b949e;border-bottom:1px solid #21262d}
+  ul li::before{content:'→';position:absolute;left:0;color:#0088ff}
+  .section-intro{font-size:17px;color:#cdd9e5;margin-bottom:32px}
+  .toc{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:32px;margin:40px 0}
+  .toc h3{margin-top:0;color:#0088ff}
+  .toc-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #21262d;color:#cdd9e5;font-size:14px}
+  .toc-num{color:#8b949e;font-size:13px}
+  .page-break{page-break-before:always}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="logo-badge">📄 Document 1 of 4</div>
+  <h1>TON Casino<br/>Full Product Description</h1>
+  <p>Telegram Mini Web App — Crypto Casino on The Open Network</p>
+  <div class="meta-grid">
+    <div class="meta-card"><div class="label">Version</div><div class="value">1.0.0</div></div>
+    <div class="meta-card"><div class="label">Date</div><div class="value">March 2026</div></div>
+    <div class="meta-card"><div class="label">Status</div><div class="value">Planning</div></div>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="page">
+  <div class="toc">
+    <h3>📋 Table of Contents</h3>
+    <div class="toc-item"><span>1. Product Vision & Overview</span><span class="toc-num">§1</span></div>
+    <div class="toc-item"><span>2. Platform & Technology</span><span class="toc-num">§2</span></div>
+    <div class="toc-item"><span>3. User Journey</span><span class="toc-num">§3</span></div>
+    <div class="toc-item"><span>4. Game Catalog</span><span class="toc-num">§4</span></div>
+    <div class="toc-item"><span>5. TON Wallet Integration</span><span class="toc-num">§5</span></div>
+    <div class="toc-item"><span>6. Security & Provably Fair</span><span class="toc-num">§6</span></div>
+    <div class="toc-item"><span>7. Risk & Compliance</span><span class="toc-num">§7</span></div>
+    <div class="toc-item"><span>8. Monetization Model</span><span class="toc-num">§8</span></div>
+    <div class="toc-item"><span>9. Roadmap</span><span class="toc-num">§9</span></div>
+  </div>
+
+  <!-- §1 -->
+  <h2><span>§1.</span> Product Vision &amp; Overview</h2>
+  <p class="section-intro">TON Casino is a provably fair, fully on-chain crypto casino delivered as a Telegram Mini Web App (MWA). Players launch the game with a single tap inside Telegram — no sign-up, no KYC for casual play, and instant TON deposits/withdrawals.</p>
+
+  <div class="callout">
+    <p>🎯 <strong>Core value proposition:</strong> The fastest way to play provably fair crypto games inside Telegram. One tap to launch, TON wallet connects in seconds, games resolve on-chain.</p>
+  </div>
+
+  <h3>Product Goals</h3>
+  <ul>
+    <li>Deliver a fully responsive mobile-first casino inside Telegram's Mini App framework</li>
+    <li>Offer instant, gas-efficient TON deposits and withdrawals via TON Connect 2.0</li>
+    <li>Provide cryptographically provably fair outcomes for all games</li>
+    <li>Launch with Mines game (live) and expand to 5+ games within 6 months</li>
+    <li>Build a sustainable house edge model (2–5%) across all game types</li>
+  </ul>
+
+  <!-- §2 -->
+  <h2><span>§2.</span> Platform &amp; Technology</h2>
+  <p class="section-intro">The product runs entirely inside Telegram's WebApp SDK. No separate app download is required. The entry point is a single Telegram Bot command or inline button.</p>
+
+  <h3>How it Works for the User</h3>
+  <div class="flow">
+    <div class="flow-step">1. Open Telegram</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">2. Tap Bot Button</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">3. Mini App Opens</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">4. Connect TON Wallet</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">5. Deposit TON</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">6. Play Games</div>
+  </div>
+
+  <h3>Technology Stack</h3>
+  <table>
+    <tr><th>Layer</th><th>Technology</th><th>Purpose</th></tr>
+    <tr><td>Frontend</td><td>React + Vite + TypeScript</td><td>UI, game rendering, state</td></tr>
+    <tr><td>Mini App Bridge</td><td>Telegram WebApp SDK</td><td>Auth, theme, haptics</td></tr>
+    <tr><td>Wallet</td><td>TON Connect 2.0</td><td>Wallet auth, sign txns</td></tr>
+    <tr><td>Backend</td><td>Node.js + Fastify</td><td>API, game logic, RNG</td></tr>
+    <tr><td>Database</td><td>PostgreSQL + Redis</td><td>Persistence + sessions</td></tr>
+    <tr><td>Blockchain</td><td>TON (FunC smart contracts)</td><td>On-chain escrow, payouts</td></tr>
+    <tr><td>DevOps</td><td>Docker + Kubernetes</td><td>Scaling, deployment</td></tr>
+  </table>
+
+  <!-- §3 -->
+  <h2><span>§3.</span> User Journey</h2>
+
+  <h3>First-Time User</h3>
+  <ul>
+    <li>User opens @TonCasinoBot in Telegram and taps "Play Now"</li>
+    <li>Telegram Mini App launches in an in-app WebView (no browser redirect)</li>
+    <li>Home screen shows game lobby with Mines highlighted as "Available"</li>
+    <li>User taps "Connect Wallet" — TON Connect popup appears (supports Tonkeeper, MyTonWallet, etc.)</li>
+    <li>Wallet connected, user sees their TON balance reflected in the app header</li>
+    <li>User taps "Deposit" and enters amount — transaction confirmed via wallet</li>
+    <li>Internal balance updated; user can now place bets across any available game</li>
+  </ul>
+
+  <h3>Returning User</h3>
+  <ul>
+    <li>Wallet auto-reconnects on launch via stored session</li>
+    <li>Balance shows current in-app credit</li>
+    <li>User enters their preferred game directly from the lobby</li>
+    <li>All game history visible in "My Bets" section</li>
+  </ul>
+
+  <h3>Withdrawal Flow</h3>
+  <div class="flow">
+    <div class="flow-step">Request Withdrawal</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Enter Amount</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Sign with Wallet</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Smart Contract Releases TON</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Confirmed in ~5s</div>
+  </div>
+
+  <!-- §4 -->
+  <h2><span>§4.</span> Game Catalog</h2>
+  <p class="section-intro">The lobby presents 8 games. Only Mines is live at launch. All others show a "Coming Soon" badge with estimated availability date.</p>
+
+  <div class="game-grid">
+    <div class="game-card active">
+      <div class="game-icon">💣</div>
+      <div class="game-name">Mines</div>
+      <div class="game-status status-live">✓ Live</div>
+    </div>
+    <div class="game-card soon">
+      <div class="game-icon">🃏</div>
+      <div class="game-name">HiLo</div>
+      <div class="game-status status-soon">Coming Soon</div>
+    </div>
+    <div class="game-card soon">
+      <div class="game-icon">🎲</div>
+      <div class="game-name">Dice</div>
+      <div class="game-status status-soon">Coming Soon</div>
+    </div>
+    <div class="game-card soon">
+      <div class="game-icon">🎡</div>
+      <div class="game-name">Mini Roulette</div>
+      <div class="game-status status-soon">Coming Soon</div>
+    </div>
+    <div class="game-card soon">
+      <div class="game-icon">🎰</div>
+      <div class="game-name">Slots</div>
+      <div class="game-status status-soon">Coming Soon</div>
+    </div>
+    <div class="game-card soon">
+      <div class="game-icon">🃏</div>
+      <div class="game-name">Blackjack</div>
+      <div class="game-status status-soon">Coming Soon</div>
+    </div>
+    <div class="game-card soon">
+      <div class="game-icon">🪙</div>
+      <div class="game-name">Coin Flip</div>
+      <div class="game-status status-soon">Coming Soon</div>
+    </div>
+    <div class="game-card soon">
+      <div class="game-icon">🐍</div>
+      <div class="game-name">Crash</div>
+      <div class="game-status status-soon">Coming Soon</div>
+    </div>
+  </div>
+
+  <!-- §5 -->
+  <h2><span>§5.</span> TON Wallet Integration</h2>
+
+  <h3>Supported Wallets</h3>
+  <ul>
+    <li>Tonkeeper (primary — most popular TON wallet)</li>
+    <li>MyTonWallet (desktop + mobile)</li>
+    <li>OpenMask (browser extension)</li>
+    <li>TON Space (built into Telegram itself, Q4 2024+)</li>
+  </ul>
+
+  <h3>Deposit Architecture</h3>
+  <p>All deposits flow into a smart contract escrow address. The contract records each user's on-chain address and credits their internal balance. Bets are deducted from the internal balance — not sent on-chain per bet, reducing gas costs significantly.</p>
+
+  <h3>Withdrawal Architecture</h3>
+  <p>Withdrawal requests trigger a backend-signed transaction from the escrow contract to the user's wallet. Minimum withdrawal: 0.5 TON. The contract enforces withdrawal limits and cooldown periods for risk management.</p>
+
+  <table>
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Minimum Deposit</td><td>0.1 TON</td></tr>
+    <tr><td>Minimum Withdrawal</td><td>0.5 TON</td></tr>
+    <tr><td>Withdrawal Processing</td><td>Instant (smart contract) / Up to 5 min (manual review if &gt;100 TON)</td></tr>
+    <tr><td>Network Fee (gas)</td><td>~0.01 TON per transaction</td></tr>
+    <tr><td>Max Single Bet</td><td>500 TON</td></tr>
+    <tr><td>Min Single Bet</td><td>0.01 TON</td></tr>
+  </table>
+
+  <!-- §6 -->
+  <h2><span>§6.</span> Security &amp; Provably Fair</h2>
+
+  <h3>Provably Fair System</h3>
+  <p>All game outcomes are determined by a combination of a <strong>Server Seed</strong> (hashed and revealed after the round) and a <strong>Client Seed</strong> (user-provided or randomly generated). This ensures neither party can manipulate the result.</p>
+
+  <div class="callout">
+    <p>🔐 <strong>Verification:</strong> Any player can independently verify any past game result by inputting the server seed, client seed, and nonce into the published open-source verification tool.</p>
+  </div>
+
+  <h3>Security Measures</h3>
+  <ul>
+    <li>All API endpoints protected by JWT + Telegram init data signature verification</li>
+    <li>Rate limiting on bets: max 10 bets/second per user</li>
+    <li>Smart contract audited by third party before mainnet launch</li>
+    <li>Multi-sig treasury wallet for large fund management</li>
+    <li>Automatic withdrawal holds on suspicious patterns (velocity checks)</li>
+  </ul>
+
+  <!-- §7 -->
+  <h2><span>§7.</span> Risk &amp; Compliance</h2>
+
+  <h3>Responsible Gambling</h3>
+  <ul>
+    <li>Self-exclusion: users can lock their account for 24h / 7 days / 30 days / permanent</li>
+    <li>Deposit limits: daily and weekly caps, user-configurable</li>
+    <li>Session time reminders every 60 minutes</li>
+    <li>Loss limit alerts when user loses &gt;50% of session deposit</li>
+  </ul>
+
+  <h3>House Risk Model</h3>
+  <table>
+    <tr><th>Risk Factor</th><th>Mitigation</th></tr>
+    <tr><td>Jackpot payout spikes</td><td>Max payout cap per game session; insurance reserve fund (10% of house profit)</td></tr>
+    <tr><td>Whale concentration</td><td>Max bet limits; VIP tier review for large players</td></tr>
+    <tr><td>Smart contract exploit</td><td>Audit + bug bounty; time-lock on contract upgrades</td></tr>
+    <tr><td>Blockchain congestion</td><td>Internal balance system buffers on-chain interaction</td></tr>
+    <tr><td>Regulatory</td><td>Geo-blocking on restricted jurisdictions; no fiat on-ramp</td></tr>
+  </table>
+
+  <!-- §8 -->
+  <h2><span>§8.</span> Monetization Model</h2>
+
+  <h3>Revenue Streams</h3>
+  <table>
+    <tr><th>Source</th><th>Description</th><th>Expected Share</th></tr>
+    <tr><td>House Edge (Games)</td><td>Built-in RTP advantage across all games</td><td>85%</td></tr>
+    <tr><td>Withdrawal Fees</td><td>0.1 TON flat fee on withdrawals</td><td>10%</td></tr>
+    <tr><td>VIP / Rakeback Program</td><td>High-volume players pay reduced edge; net still profitable</td><td>5%</td></tr>
+  </table>
+
+  <h3>House Edge by Game (Planned)</h3>
+  <table>
+    <tr><th>Game</th><th>House Edge</th><th>RTP</th></tr>
+    <tr><td>Mines (3 mines)</td><td>2.0%</td><td>98.0%</td></tr>
+    <tr><td>HiLo</td><td>2.5%</td><td>97.5%</td></tr>
+    <tr><td>Dice</td><td>1.5%</td><td>98.5%</td></tr>
+    <tr><td>Mini Roulette</td><td>5.26%</td><td>94.74%</td></tr>
+    <tr><td>Crash</td><td>3.0%</td><td>97.0%</td></tr>
+    <tr><td>Coin Flip</td><td>2.0%</td><td>98.0%</td></tr>
+  </table>
+
+  <!-- §9 -->
+  <h2><span>§9.</span> Roadmap</h2>
+
+  <table>
+    <tr><th>Phase</th><th>Timeline</th><th>Deliverables</th></tr>
+    <tr><td><span class="badge badge-blue">Phase 1</span> MVP</td><td>Month 1–2</td><td>Telegram Bot, Mines game live, TON Connect wallet, basic lobby</td></tr>
+    <tr><td><span class="badge badge-blue">Phase 2</span> Expand</td><td>Month 3–4</td><td>HiLo, Dice games; referral system; leaderboard</td></tr>
+    <tr><td><span class="badge badge-blue">Phase 3</span> Scale</td><td>Month 5–6</td><td>Mini Roulette, Crash; VIP program; Telegram Stars integration</td></tr>
+    <tr><td><span class="badge badge-orange">Phase 4</span> Full</td><td>Month 7–9</td><td>Slots, Blackjack; mobile app (PWA); multi-language support</td></tr>
+    <tr><td><span class="badge badge-green">Phase 5</span> Ecosystem</td><td>Month 10+</td><td>Native token launch; staking; affiliate program</td></tr>
+  </table>
+
+  <div style="margin-top:80px;padding-top:40px;border-top:1px solid #30363d;text-align:center;color:#8b949e;font-size:13px">
+    TON Casino — Confidential Product Documentation — v1.0.0 — March 2026
+  </div>
+</div>
+</body>
+</html>

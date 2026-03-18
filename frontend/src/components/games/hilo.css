@@ -1,0 +1,226 @@
+/* ══════════════════════════════════════
+   HILO GAME — UI
+   ══════════════════════════════════════ */
+
+/* ═══ Main Card ═══ */
+.hilo-card {
+  width: clamp(110px, 30vw, 140px);
+  height: clamp(155px, 42vw, 195px);
+  border-radius: var(--r-lg);
+  background: linear-gradient(145deg, #1a1040, #120d2a);
+  border: 2px solid rgba(124, 58, 237, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(124, 58, 237, 0.15);
+  perspective: 1000px;
+}
+.hilo-card-correct {
+  border-color: rgba(0, 200, 136, 0.5);
+  box-shadow: 0 0 24px rgba(0, 200, 136, 0.2);
+}
+.hilo-card-wrong {
+  border-color: rgba(255, 107, 107, 0.5);
+  box-shadow: 0 0 24px rgba(255, 107, 107, 0.2);
+  animation: cardShake 0.3s ease;
+}
+@keyframes cardShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+
+.hilo-card-value {
+  font-size: clamp(36px, 10vw, 48px);
+  font-weight: 900;
+  line-height: 1;
+}
+.hilo-card-suit-top {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-size: clamp(14px, 4vw, 18px);
+}
+.hilo-card-suit-bottom {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-size: clamp(14px, 4vw, 18px);
+  transform: rotate(180deg);
+}
+
+.hilo-card-placeholder {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+  gap: var(--s-2);
+}
+.hilo-card-question {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--c-text-muted);
+}
+.hilo-card-sub {
+  font-size: 10px;
+  color: var(--c-text-muted);
+  text-align: center;
+}
+
+/* ═══ Mini Card (History) ═══ */
+.hilo-mini {
+  width: 34px;
+  height: 46px;
+  border-radius: 6px;
+  background: #1a1040;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  flex-shrink: 0;
+}
+.hilo-mini-correct {
+  background: rgba(0, 200, 136, 0.08);
+  border-color: rgba(0, 200, 136, 0.3);
+}
+.hilo-mini-wrong {
+  background: rgba(255, 107, 107, 0.08);
+  border-color: rgba(255, 107, 107, 0.3);
+}
+.hilo-mini-value { font-size: 11px; font-weight: 800; color: #e2e8f0; }
+.hilo-mini-suit { font-size: 9px; color: #e2e8f0; }
+.hilo-mini-red { color: #ef4444; }
+
+/* ═══ History Strip ═══ */
+.hilo-history-wrap {
+  padding: var(--s-2) var(--s-4);
+}
+.hilo-history-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 0;
+}
+.hilo-history-scroll::-webkit-scrollbar { display: none; }
+
+/* ═══ Controls ═══ */
+.hilo-controls {
+  padding: var(--s-4);
+  padding-bottom: calc(var(--s-4) + var(--safe-bottom));
+  background: linear-gradient(180deg, rgba(13, 21, 38, 0.96), rgba(10, 15, 28, 0.98));
+  border-top: 1px solid var(--c-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+/* ═══ Multiplier Bar ═══ */
+.hilo-mult-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(124, 58, 237, 0.06);
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  border-radius: var(--r-lg);
+  padding: var(--s-3);
+}
+.hilo-mult-col { text-align: center; }
+.hilo-mult-label { font-size: 9px; color: var(--c-text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+.hilo-mult-val { display: block; font-size: clamp(16px, 4.5vw, 20px); font-weight: 800; color: #a78bfa; margin-top: 2px; }
+.hilo-mult-pay { display: block; font-size: clamp(13px, 3.5vw, 16px); font-weight: 700; color: #fff; margin-top: 2px; }
+.hilo-mult-div { width: 1px; height: 32px; background: rgba(255, 255, 255, 0.06); }
+
+/* ═══ Guess Buttons ═══ */
+.hilo-guess-row {
+  display: flex;
+  gap: var(--s-3);
+}
+.hilo-guess-btn {
+  flex: 1;
+  height: clamp(56px, 14vw, 64px);
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  transition: transform 100ms ease;
+}
+.hilo-guess-btn:active:not(:disabled) { transform: scale(0.96); }
+.hilo-guess-btn:disabled { opacity: 0.4; }
+.hilo-guess-hi {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.25);
+}
+.hilo-guess-lo {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.25);
+}
+.hilo-guess-arrow { font-size: 14px; color: #fff; font-weight: 900; }
+.hilo-guess-text { font-size: clamp(12px, 3.5vw, 14px); font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+.hilo-guess-odds { font-size: 9px; color: rgba(255, 255, 255, 0.5); font-weight: 600; }
+
+/* ═══ Cashout + Skip Row ═══ */
+.hilo-action-row { display: flex; gap: var(--s-2); }
+.hilo-cashout-btn {
+  flex: 3;
+  height: clamp(48px, 12vw, 52px);
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  transition: transform 100ms ease;
+}
+.hilo-cashout-btn:active:not(:disabled) { transform: scale(0.97); }
+.hilo-cashout-btn:disabled { opacity: 0.4; }
+.hilo-cashout-text { font-size: 13px; font-weight: 800; color: #fff; }
+.hilo-cashout-amount { font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.7); }
+
+.hilo-skip-btn {
+  flex: 1;
+  height: clamp(48px, 12vw, 52px);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.hilo-skip-btn:disabled { opacity: 0.3; }
+.hilo-skip-count { font-size: 9px; color: var(--c-text-muted); }
+
+/* ═══ Bet Section ═══ */
+.hilo-bet-section { display: flex; flex-direction: column; gap: var(--s-3); }
+.hilo-bet-label { font-size: 11px; font-weight: 600; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.hilo-bet-group { display: flex; gap: var(--s-2); align-items: center; }
+
+.hilo-start-btn {
+  width: 100%;
+  height: clamp(50px, 13vw, 56px);
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  transition: transform 100ms ease;
+}
+.hilo-start-btn:active:not(:disabled) { transform: scale(0.97); }
+.hilo-start-btn:disabled { opacity: 0.4; }

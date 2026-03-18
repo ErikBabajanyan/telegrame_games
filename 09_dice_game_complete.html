@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TON Casino — Dice Game: Complete Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#060a14;color:#e2e8f0;font-size:14px;line-height:1.75}
+
+  .cover{min-height:100vh;background:linear-gradient(160deg,#060a14 0%,#0a1a0d 40%,#060a14 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;position:relative;overflow:hidden}
+  .cover::before{content:'🎲';position:absolute;font-size:280px;opacity:0.04;top:50%;left:50%;transform:translate(-50%,-50%)}
+  .cover::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 40% 50%,rgba(251,191,36,0.1) 0%,transparent 55%),radial-gradient(circle at 60% 50%,rgba(245,158,11,0.08) 0%,transparent 55%)}
+  .doc-badge{position:relative;z-index:1;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:10px 28px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:36px}
+  .cover-title{position:relative;z-index:1;font-size:clamp(40px,7vw,80px);font-weight:900;line-height:1.0;letter-spacing:-3px;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,#fde68a 40%,#f59e0b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{position:relative;z-index:1;font-size:17px;color:#718096;max-width:560px;margin-bottom:48px}
+  .meta-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+  .meta-pill{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px;padding:8px 20px;font-size:12px;color:#a5b4c8;font-weight:500}
+
+  .page{max-width:1000px;margin:0 auto;padding:80px 40px}
+  h2{font-size:26px;font-weight:800;color:#fff;margin-bottom:8px;margin-top:72px;padding-bottom:12px;border-bottom:2px solid #1a1a0d}
+  h2:first-child{margin-top:0}
+  .h2n{color:#f59e0b}`
+  h3{font-size:17px;font-weight:700;color:#cdd9e5;margin-top:28px;margin-bottom:10px}
+  h4{font-size:12px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:1.5px;margin-top:20px;margin-bottom:8px}
+  p{color:#8b949e;margin-bottom:14px;font-size:14px}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#0d1526;border:1px solid rgba(255,255,255,0.06);padding:2px 7px;border-radius:4px;color:#fbbf24}
+  pre{font-family:'JetBrains Mono',monospace;font-size:12px;background:#0a0f1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;overflow-x:auto;color:#e2e8f0;line-height:1.7;margin:16px 0}
+  .kw{color:#f472b6} .str{color:#93c5fd} .cmt{color:#4a5568} .fn{color:#fde68a} .num{color:#34d399} .prop{color:#fbbf24}
+  table{width:100%;border-collapse:collapse;margin:20px 0}
+  th{background:#1a1a0d;color:#f59e0b;padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px}
+  td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:#cdd9e5;font-size:13px}
+  .callout{background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(251,191,36,0.04));border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:20px;margin:20px 0}
+  .callout p{margin:0;color:#cdd9e5;font-size:13px}
+  ul{list-style:none;padding:0;margin:12px 0}
+  ul li{padding:7px 0;padding-left:18px;position:relative;color:#8b949e;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px}
+  ul li::before{content:'→';position:absolute;left:0;color:#f59e0b}
+
+  /* Phone mockup */
+  .screens-row{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin:40px 0}
+  .phone-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .phone-label{font-size:12px;font-weight:700;color:#6b7b8d;text-transform:uppercase;letter-spacing:2px}
+  .phone{width:300px;height:620px;background:#060a14;border-radius:40px;border:3px solid #1a2040;box-shadow:0 40px 100px rgba(0,0,0,0.7);overflow:hidden;position:relative;flex-shrink:0}
+  .phone-notch{width:80px;height:22px;background:#000;border-radius:0 0 14px 14px;margin:0 auto;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10}
+
+  /* Dice screen */
+  .s-dice{width:100%;height:100%;display:flex;flex-direction:column;background:linear-gradient(180deg,#080e1a,#060a14);position:relative}
+  .s-dice::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,0.06) 0%,transparent 70%);top:25%;left:50%;transform:translate(-50%,-50%)}
+  .s-dheader{padding:32px 14px 10px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+  .s-dback{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:#6b7b8d;font-size:16px}
+  .s-dtitle{font-size:15px;font-weight:800;color:#fff;letter-spacing:2px}
+  .s-dbal{font-size:12px;font-weight:700;color:#fff;background:rgba(0,136,255,0.1);border:1px solid rgba(0,136,255,0.2);border-radius:10px;padding:6px 12px}
+
+  /* Slider area */
+  .s-slider-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px 14px;position:relative;z-index:2}
+  .s-dice-result-num{font-size:64px;font-weight:900;color:#f59e0b;text-shadow:0 0 30px rgba(245,158,11,0.3)}
+  .s-dice-bar{width:100%;height:12px;border-radius:6px;background:#131d2e;position:relative;overflow:hidden}
+  .s-dice-bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
+  .s-dice-bar-under{background:linear-gradient(90deg,#16a34a,#22c55e);width:48%}
+  .s-dice-bar-over{background:linear-gradient(90deg,#ef4444,#dc2626);right:0;left:auto;width:52%}
+  .s-dice-marker{position:absolute;top:-4px;width:3px;height:20px;background:#fff;border-radius:2px;left:48%;box-shadow:0 0 8px rgba(255,255,255,0.5)}
+  .s-dice-labels{display:flex;justify-content:space-between;width:100%;font-size:10px;color:#4a5568;font-weight:600}
+  .s-dice-target-row{display:flex;align-items:center;gap:12px;width:100%}
+  .s-dice-target-label{font-size:11px;color:#4a5568;text-transform:uppercase;font-weight:600;letter-spacing:0.5px;white-space:nowrap}
+  .s-dice-target-val{font-size:24px;font-weight:800;color:#fff}
+  .s-dice-target-slider{flex:1;height:40px;background:#131d2e;border:1px solid rgba(255,255,255,0.06);border-radius:8px}
+
+  /* Dice bet controls */
+  .s-dcontrols{padding:12px 14px 20px;position:relative;z-index:2;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,rgba(13,21,38,0.96),rgba(10,15,28,0.98));border-top:1px solid rgba(255,255,255,0.04)}
+  .s-dice-mode-row{display:flex;gap:8px}
+  .s-dice-mode{flex:1;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  .s-dice-mode-under{background:rgba(22,163,74,0.15);border:1px solid rgba(22,163,74,0.3);color:#22c55e}
+  .s-dice-mode-over{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#ef4444}
+  .s-dice-mode-active{box-shadow:0 0 12px rgba(245,158,11,0.2)}
+  .s-dice-info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .s-dice-info-box{background:#0d1526;border:1px solid rgba(255,255,255,0.04);border-radius:8px;padding:8px;text-align:center}
+  .s-dice-info-label{font-size:9px;color:#4a5568;text-transform:uppercase;font-weight:600;letter-spacing:0.5px}
+  .s-dice-info-val{font-size:16px;font-weight:800;color:#fff;margin-top:2px}
+  .s-dice-info-val.green{color:#22c55e}
+  .s-dice-info-val.amber{color:#f59e0b}
+  .s-dice-roll-btn{width:100%;height:52px;border-radius:14px;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(245,158,11,0.25)}
+
+  .file-tree{background:#0a0f1a;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;margin:16px 0}
+  .ft-dir{color:#fbbf24} .ft-file{color:#e2e8f0} .ft-cmt{color:#4a5568} .ft-i1{padding-left:20px} .ft-i2{padding-left:40px}
+
+  .state-diagram{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:24px 0}
+  .state-box{background:#0d1526;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 20px;text-align:center;min-width:100px}
+  .state-box-active{border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.08)}
+  .state-name{font-size:13px;font-weight:700;color:#fff}
+  .state-desc{font-size:10px;color:#4a5568;margin-top:3px}
+  .state-arrow{display:flex;align-items:center;color:#4a5568;font-size:20px}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="doc-badge">Dice Game — Complete Spec</div>
+  <div class="cover-title">🎲 Dice<br/>Game</div>
+  <div class="cover-sub">Classic probability game — set your target, roll the dice, win if the result lands in your range. Simple, fast, and highly customizable risk.</div>
+  <div class="meta-row">
+    <div class="meta-pill">🎲 Range 1–100</div>
+    <div class="meta-pill">📊 1.5% Edge</div>
+    <div class="meta-pill">⚡ Instant Roll</div>
+    <div class="meta-pill">🎯 Custom Target</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- §1 GAME OVERVIEW -->
+  <h2><span class="h2n">§1.</span> Game Overview</h2>
+  <p>Dice is a single-roll prediction game. The player chooses a target number (1–98) and a direction (<strong>Roll Under</strong> or <strong>Roll Over</strong>). A random number 1–100 is generated. If the result satisfies the condition, the player wins.</p>
+
+  <div class="callout">
+    <p>🎯 <strong>Core mechanic:</strong> Player controls their own risk. A low target on "Roll Under" = easy to win, low payout. A high target = hard to win, high payout. The player is effectively setting their own multiplier with every bet.</p>
+  </div>
+
+  <table>
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Range</td><td>1 – 100 (integers)</td></tr>
+    <tr><td>Target</td><td>Player-selected, 2 – 98</td></tr>
+    <tr><td>Modes</td><td>Roll Under (result &lt; target) or Roll Over (result &gt; target)</td></tr>
+    <tr><td>Equal</td><td>Result = target → house wins (loss)</td></tr>
+    <tr><td>House edge</td><td>1.5%</td></tr>
+    <tr><td>RTP</td><td>98.5%</td></tr>
+    <tr><td>Game speed</td><td>Instant — single roll per bet, no multi-round</td></tr>
+    <tr><td>Min bet</td><td>0.01 TON</td></tr>
+    <tr><td>Max bet</td><td>500 TON</td></tr>
+    <tr><td>Outcome model</td><td>Per-roll RNG with luck factor</td></tr>
+  </table>
+
+  <h3>How to Play</h3>
+  <ul>
+    <li>Player sets bet amount</li>
+    <li>Player selects target number (2–98) using a slider</li>
+    <li>Player chooses "Roll Under" or "Roll Over"</li>
+    <li>Win chance and multiplier update in real-time as target changes</li>
+    <li>Player taps "ROLL" — single random number 1–100 is generated</li>
+    <li>If result satisfies condition → WIN (bet × multiplier credited)</li>
+    <li>If result doesn't satisfy → LOSS (bet forfeited)</li>
+    <li>Instant result — no multi-round, no cashout needed</li>
+  </ul>
+
+  <h3>Key Difference from Mines/HiLo</h3>
+  <div class="callout">
+    <p>⚡ <strong>Single-roll game:</strong> Unlike Mines and HiLo which are multi-round games with cashout mechanics, Dice is a single bet → single result game. No game session to resume. Each roll is independent. This makes it the fastest game in the casino.</p>
+  </div>
+
+  <!-- §2 STATE MACHINE -->
+  <h2><span class="h2n">§2.</span> Game State Machine</h2>
+
+  <div class="state-diagram">
+    <div class="state-box"><div class="state-name">IDLE</div><div class="state-desc">Set bet + target</div></div>
+    <div class="state-arrow">→</div>
+    <div class="state-box state-box-active"><div class="state-name">ROLLING</div><div class="state-desc">Animation playing</div></div>
+    <div class="state-arrow">→</div>
+    <div class="state-box"><div class="state-name">RESULT</div><div class="state-desc">Win or Lose shown</div></div>
+    <div class="state-arrow">→</div>
+    <div class="state-box"><div class="state-name">IDLE</div><div class="state-desc">Auto-reset for next</div></div>
+  </div>
+
+  <p>No "active game" concept — each roll is atomic. No session stored in Redis. No resume needed. The frontend handles animation state locally.</p>
+
+  <table>
+    <tr><th>State</th><th>Duration</th><th>Description</th></tr>
+    <tr><td>IDLE</td><td>Unlimited</td><td>Player adjusts bet, target, mode. "ROLL" button active.</td></tr>
+    <tr><td>ROLLING</td><td>~1.5s</td><td>Dice roll animation. Buttons disabled. Number counter spins.</td></tr>
+    <tr><td>RESULT</td><td>~2s</td><td>Result shown with win/loss feedback. Auto-fades back to IDLE.</td></tr>
+  </table>
+
+  <!-- §3 MATHEMATICAL MODEL -->
+  <h2><span class="h2n">§3.</span> Mathematical Model</h2>
+
+  <h3>Win Probability</h3>
+  <pre><span class="cmt">// Roll Under: win if result &lt; target</span>
+<span class="fn">winProbability</span>(<span class="prop">target</span>, <span class="str">'under'</span>) = (target - <span class="num">1</span>) / <span class="num">100</span>
+
+<span class="cmt">// Roll Over: win if result &gt; target</span>
+<span class="fn">winProbability</span>(<span class="prop">target</span>, <span class="str">'over'</span>) = (<span class="num">100</span> - target) / <span class="num">100</span>
+
+<span class="cmt">// Examples:</span>
+<span class="cmt">// Under 50 → 49/100 = 49% win chance</span>
+<span class="cmt">// Over 50  → 50/100 = 50% win chance</span>
+<span class="cmt">// Under 95 → 94/100 = 94% win chance (easy, low mult)</span>
+<span class="cmt">// Under 5  → 4/100  = 4% win chance (hard, high mult)</span></pre>
+
+  <h3>Multiplier Calculation</h3>
+  <pre><span class="fn">multiplier</span> = (<span class="num">1</span> / winProbability) × (<span class="num">1</span> - HOUSE_EDGE)
+<span class="fn">multiplier</span> = (<span class="num">1</span> / winProbability) × <span class="num">0.985</span>
+
+<span class="cmt">// Payout</span>
+<span class="fn">payout</span> = betAmount × multiplier</pre>
+
+  <h3>Full Multiplier Table</h3>
+
+  <table>
+    <tr><th>Target</th><th>Under Win%</th><th>Under Mult</th><th>Over Win%</th><th>Over Mult</th><th>Risk Level</th></tr>
+    <tr><td>5</td><td>4%</td><td>24.63×</td><td>95%</td><td>1.04×</td><td>EXTREME / LOW</td></tr>
+    <tr><td>10</td><td>9%</td><td>10.94×</td><td>90%</td><td>1.09×</td><td>HIGH / LOW</td></tr>
+    <tr><td>15</td><td>14%</td><td>7.04×</td><td>85%</td><td>1.16×</td><td>HIGH / LOW</td></tr>
+    <tr><td>25</td><td>24%</td><td>4.10×</td><td>75%</td><td>1.31×</td><td>MED-HIGH / LOW</td></tr>
+    <tr><td>33</td><td>32%</td><td>3.08×</td><td>67%</td><td>1.47×</td><td>MED / LOW-MED</td></tr>
+    <tr><td>50</td><td>49%</td><td>2.01×</td><td>50%</td><td>1.97×</td><td>BALANCED</td></tr>
+    <tr><td>67</td><td>66%</td><td>1.49×</td><td>33%</td><td>2.98×</td><td>LOW-MED / MED</td></tr>
+    <tr><td>75</td><td>74%</td><td>1.33×</td><td>25%</td><td>3.94×</td><td>LOW / MED-HIGH</td></tr>
+    <tr><td>90</td><td>89%</td><td>1.11×</td><td>10%</td><td>9.85×</td><td>LOW / HIGH</td></tr>
+    <tr><td>95</td><td>94%</td><td>1.05×</td><td>5%</td><td>19.70×</td><td>LOW / EXTREME</td></tr>
+  </table>
+
+  <div class="callout">
+    <p>🎲 <strong>Player controls everything:</strong> The slider is the game. Moving it left = safer, lower payout. Moving it right = riskier, higher payout. The multiplier updates in real-time. This creates an intuitive, highly engaging feedback loop.</p>
+  </div>
+
+  <!-- §4 PER-ROLL RNG -->
+  <h2><span class="h2n">§4.</span> Per-Roll RNG with Luck Factor</h2>
+
+  <pre><span class="kw">function</span> <span class="fn">rollDice</span>(
+  <span class="prop">target</span>: <span class="str">number</span>,
+  <span class="prop">mode</span>: <span class="str">'under' | 'over'</span>,
+  <span class="prop">luckFactor</span>: <span class="str">number</span>
+): { <span class="prop">result</span>: <span class="str">number</span>; <span class="prop">win</span>: <span class="str">boolean</span> } {
+  <span class="cmt">// 1. Calculate base win probability</span>
+  <span class="kw">const</span> <span class="prop">baseProb</span> = mode === <span class="str">'under'</span>
+    ? (target - <span class="num">1</span>) / <span class="num">100</span>
+    : (<span class="num">100</span> - target) / <span class="num">100</span>
+
+  <span class="cmt">// 2. Adjust with luck factor</span>
+  <span class="kw">const</span> <span class="prop">adjustedProb</span> = <span class="fn">clamp</span>(baseProb / luckFactor, <span class="num">0.01</span>, <span class="num">0.99</span>)
+
+  <span class="cmt">// 3. Roll win/loss</span>
+  <span class="kw">const</span> <span class="prop">isWin</span> = <span class="fn">cryptoRandom</span>() &lt; adjustedProb
+
+  <span class="cmt">// 4. Generate a result number that matches</span>
+  <span class="kw">const</span> <span class="prop">result</span> = <span class="fn">generateResultForOutcome</span>(target, mode, isWin)
+
+  <span class="kw">return</span> { result, win: isWin }
+}</pre>
+
+  <p>The result number is generated AFTER determining win/loss — ensuring the displayed number is consistent with the outcome. Same <code>luck:{userId}</code> Redis key, same hourly worker.</p>
+
+  <!-- §5 BACKEND ARCHITECTURE -->
+  <h2><span class="h2n">§5.</span> Backend Architecture</h2>
+
+  <h3>File Structure</h3>
+  <div class="file-tree">
+<span class="ft-dir">src/modules/games/dice/</span><br/>
+<span class="ft-i1 ft-file">dice.engine.ts</span>    <span class="ft-cmt">← Roll logic, probability, multiplier, RNG</span><br/>
+<span class="ft-i1 ft-file">dice.service.ts</span>   <span class="ft-cmt">← Roll handler (single endpoint — no sessions)</span><br/>
+<span class="ft-i1 ft-file">dice.routes.ts</span>    <span class="ft-cmt">← REST endpoints</span><br/>
+<span class="ft-i1 ft-file">dice.model.ts</span>     <span class="ft-cmt">← Mongoose schema for dice rounds</span><br/>
+<br/>
+<span class="ft-dir">src/types/</span><br/>
+<span class="ft-i1 ft-file">dice.types.ts</span>     <span class="ft-cmt">← Interfaces: DiceRollInput, DiceRollResult</span><br/>
+  </div>
+
+  <h3>MongoDB Schema</h3>
+  <p>Each roll is a single document. No active game state — it's created and finalized in one operation.</p>
+
+  <pre>{
+  <span class="prop">userId</span>: ObjectId,
+  <span class="prop">gameType</span>: <span class="str">'dice'</span>,
+  <span class="prop">status</span>: <span class="str">'won' | 'lost'</span>,         <span class="cmt">// never 'active'</span>
+  <span class="prop">betAmount</span>: <span class="num">300000000</span>,            <span class="cmt">// 0.3 TON</span>
+  <span class="prop">payoutAmount</span>: <span class="num">603000000</span>,          <span class="cmt">// 0.603 TON (won)</span>
+  <span class="prop">multiplier</span>: <span class="num">2.01</span>,
+  <span class="prop">dice</span>: {
+    <span class="prop">target</span>: <span class="num">50</span>,
+    <span class="prop">mode</span>: <span class="str">'under'</span>,
+    <span class="prop">result</span>: <span class="num">37</span>,                   <span class="cmt">// rolled 37, under 50 → win</span>
+    <span class="prop">winProbability</span>: <span class="num">0.49</span>,
+  },
+  <span class="prop">createdAt</span>: Date
+}</pre>
+
+  <h3>REST API — Only 2 Endpoints</h3>
+
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Body</th><th>Description</th></tr>
+    <tr><td>POST</td><td>/roll</td><td>{betAmount, target, mode}</td><td>Place bet + roll in one request. Returns result immediately.</td></tr>
+    <tr><td>GET</td><td>/history</td><td>?page&limit</td><td>Past dice rolls</td></tr>
+  </table>
+
+  <div class="callout">
+    <p>⚡ <strong>No session management:</strong> Unlike Mines and HiLo, Dice has no <code>/start</code>, <code>/active</code>, <code>/cashout</code>, or Redis game session. Each POST to <code>/roll</code> is a complete, atomic game — bet deducted, outcome calculated, payout credited (if won), all in one request.</p>
+  </div>
+
+  <h3>Roll Flow (single request)</h3>
+  <table>
+    <tr><th>Step</th><th>Action</th></tr>
+    <tr><td>1</td><td>Validate: betAmount (0.01–500 TON), target (2–98), mode (under|over)</td></tr>
+    <tr><td>2</td><td>Deduct bet atomically from Redis balance</td></tr>
+    <tr><td>3</td><td>Get user's luck factor from Redis</td></tr>
+    <tr><td>4</td><td>Calculate win probability, run RNG roll</td></tr>
+    <tr><td>5</td><td>Generate display result number consistent with outcome</td></tr>
+    <tr><td>6</td><td>If won: credit payout to Redis balance, record win transaction</td></tr>
+    <tr><td>7</td><td>If lost: record bet transaction only (house keeps bet)</td></tr>
+    <tr><td>8</td><td>Save DiceRound document to MongoDB</td></tr>
+    <tr><td>9</td><td>Return {result, win, multiplier, payout} to client</td></tr>
+  </table>
+
+  <!-- §6 UI DESIGN -->
+  <h2><span class="h2n">§6.</span> UI Design</h2>
+
+  <div class="screens-row">
+
+    <!-- Dice Game — Idle -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="s-dice">
+          <div class="s-dheader">
+            <div class="s-dback">←</div>
+            <div class="s-dtitle">DICE</div>
+            <div class="s-dbal">💎 12.50</div>
+          </div>
+
+          <div class="s-slider-area">
+            <div class="s-dice-result-num">—</div>
+
+            <!-- Probability bar -->
+            <div style="width:100%">
+              <div class="s-dice-bar">
+                <div class="s-dice-bar-fill s-dice-bar-under"></div>
+                <div class="s-dice-marker"></div>
+              </div>
+              <div class="s-dice-labels">
+                <span>0</span>
+                <span style="color:#22c55e;font-weight:700">WIN ZONE</span>
+                <span style="position:absolute;left:48%;transform:translateX(-50%);color:#f59e0b;font-weight:700">48</span>
+                <span style="color:#ef4444;font-weight:700">LOSE ZONE</span>
+                <span>100</span>
+              </div>
+            </div>
+
+            <!-- Mode toggle -->
+            <div class="s-dice-mode-row">
+              <div class="s-dice-mode s-dice-mode-under s-dice-mode-active">ROLL UNDER</div>
+              <div class="s-dice-mode s-dice-mode-over">ROLL OVER</div>
+            </div>
+
+            <!-- Info grid -->
+            <div class="s-dice-info-grid">
+              <div class="s-dice-info-box">
+                <div class="s-dice-info-label">Target</div>
+                <div class="s-dice-info-val amber">48</div>
+              </div>
+              <div class="s-dice-info-box">
+                <div class="s-dice-info-label">Win Chance</div>
+                <div class="s-dice-info-val green">47%</div>
+              </div>
+              <div class="s-dice-info-box">
+                <div class="s-dice-info-label">Multiplier</div>
+                <div class="s-dice-info-val">2.10×</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s-dcontrols">
+            <div style="font-size:10px;color:#4a5568;text-transform:uppercase;font-weight:600;letter-spacing:0.5px">Bet Amount</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div style="width:40px;height:40px;border-radius:8px;background:#131d2e;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:#6b7b8d;font-size:13px;font-weight:700">½</div>
+              <div style="flex:1;height:40px;background:#131d2e;border:1px solid rgba(255,255,255,0.06);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600">0.30 TON</div>
+              <div style="width:40px;height:40px;border-radius:8px;background:#131d2e;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:#6b7b8d;font-size:13px;font-weight:700">2x</div>
+            </div>
+            <div class="s-dice-roll-btn">
+              <span style="font-size:14px;font-weight:800;color:#fff;letter-spacing:0.5px">🎲 ROLL</span>
+              <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.7)">0.30 TON</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">① Idle — Set Target</div>
+    </div>
+
+    <!-- Dice Game — Win Result -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="s-dice">
+          <div class="s-dheader">
+            <div class="s-dback">←</div>
+            <div class="s-dtitle">DICE</div>
+            <div class="s-dbal">💎 12.80</div>
+          </div>
+
+          <div class="s-slider-area">
+            <div class="s-dice-result-num" style="color:#22c55e;text-shadow:0 0 30px rgba(34,197,94,0.4)">37</div>
+
+            <div style="width:100%">
+              <div class="s-dice-bar">
+                <div class="s-dice-bar-fill s-dice-bar-under"></div>
+                <div class="s-dice-marker"></div>
+              </div>
+              <div class="s-dice-labels"><span>0</span><span>100</span></div>
+            </div>
+
+            <!-- Win banner -->
+            <div style="width:100%;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px">
+              <span style="font-size:28px">🎉</span>
+              <div>
+                <div style="font-size:16px;font-weight:800;color:#fff">YOU WON!</div>
+                <div style="font-size:14px;font-weight:600;color:#22c55e">+0.63 TON (2.10×)</div>
+              </div>
+            </div>
+
+            <div class="s-dice-info-grid">
+              <div class="s-dice-info-box">
+                <div class="s-dice-info-label">Rolled</div>
+                <div class="s-dice-info-val green">37</div>
+              </div>
+              <div class="s-dice-info-box">
+                <div class="s-dice-info-label">Target</div>
+                <div class="s-dice-info-val amber">&lt; 48</div>
+              </div>
+              <div class="s-dice-info-box">
+                <div class="s-dice-info-label">Payout</div>
+                <div class="s-dice-info-val">0.63 TON</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s-dcontrols">
+            <div class="s-dice-roll-btn">
+              <span style="font-size:14px;font-weight:800;color:#fff">🎲 ROLL AGAIN</span>
+              <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.7)">0.30 TON</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">② Win Result</div>
+    </div>
+
+  </div>
+
+  <h3>UI Components</h3>
+  <table>
+    <tr><th>Component</th><th>Description</th></tr>
+    <tr><td>Result Number</td><td>Large center number (64px, bold). Amber when idle, green on win, red on loss. Counter-spin animation on roll.</td></tr>
+    <tr><td>Probability Bar</td><td>Horizontal bar. Green section = win zone, red section = lose zone. White marker at target position. Updates live as slider moves.</td></tr>
+    <tr><td>Target Slider</td><td>Range input 2–98. Controls the probability bar split. Shows target number prominently.</td></tr>
+    <tr><td>Mode Toggle</td><td>Two buttons: "Roll Under" (green) / "Roll Over" (red). Switches which side is win zone.</td></tr>
+    <tr><td>Info Grid</td><td>3-column: Target | Win Chance% | Multiplier. Updates in real-time with slider.</td></tr>
+    <tr><td>Roll Button</td><td>Amber gradient, "🎲 ROLL" + bet amount. 52px height.</td></tr>
+    <tr><td>Result Banner</td><td>Win = green banner with payout. Loss = red. Shows for 2s then fades.</td></tr>
+  </table>
+
+  <h3>Animations</h3>
+  <ul>
+    <li>Roll: result number spins through random values for ~1.5s before landing</li>
+    <li>Win: number turns green + scale pulse + confetti</li>
+    <li>Loss: number turns red + shake</li>
+    <li>Bar marker: slides to result position during roll animation</li>
+    <li>Result banner: slide up (200ms), auto-dismiss after 2s</li>
+    <li>Mode toggle: smooth background color transition (150ms)</li>
+    <li>Slider: real-time bar split animation</li>
+  </ul>
+
+  <h3>Color Theme (Dice-specific)</h3>
+  <table>
+    <tr><th>Element</th><th>Color</th><th>Use</th></tr>
+    <tr><td>Primary accent</td><td>#F59E0B (amber)</td><td>Headers, roll button, target marker, neutral result</td></tr>
+    <tr><td>Win / Under</td><td>#22C55E (green)</td><td>Win zone, under mode, correct result</td></tr>
+    <tr><td>Lose / Over</td><td>#EF4444 (red)</td><td>Lose zone, over mode, wrong result</td></tr>
+    <tr><td>Background glow</td><td>rgba(245,158,11,0.06)</td><td>Subtle amber radial gradient</td></tr>
+  </table>
+
+  <!-- §7 FRONTEND ARCHITECTURE -->
+  <h2><span class="h2n">§7.</span> Frontend Architecture</h2>
+
+  <div class="file-tree">
+<span class="ft-dir">src/</span><br/>
+<span class="ft-i1 ft-dir">pages/</span><br/>
+<span class="ft-i2 ft-file">DiceGame.tsx</span>        <span class="ft-cmt">← Main page</span><br/>
+<br/>
+<span class="ft-i1 ft-dir">components/games/</span><br/>
+<span class="ft-i2 ft-file">DiceResult.tsx</span>      <span class="ft-cmt">← Big result number with spin animation</span><br/>
+<span class="ft-i2 ft-file">DiceBar.tsx</span>         <span class="ft-cmt">← Probability bar + target marker</span><br/>
+<span class="ft-i2 ft-file">DiceControls.tsx</span>    <span class="ft-cmt">← Slider, mode toggle, bet input, roll button</span><br/>
+<span class="ft-i2 ft-file">dice.css</span>            <span class="ft-cmt">← Dice-specific styles</span><br/>
+<br/>
+<span class="ft-i1 ft-dir">stores/</span><br/>
+<span class="ft-i2 ft-file">useDiceStore.ts</span>     <span class="ft-cmt">← Simple store — no session, just UI state</span><br/>
+<br/>
+<span class="ft-i1 ft-dir">api/</span><br/>
+<span class="ft-i2 ft-file">dice.ts</span>             <span class="ft-cmt">← POST /roll, GET /history</span><br/>
+  </div>
+
+  <h3>Zustand Store</h3>
+  <pre><span class="kw">interface</span> <span class="fn">DiceState</span> {
+  <span class="prop">status</span>: <span class="str">'idle' | 'rolling' | 'result'</span>
+  <span class="prop">betAmount</span>: <span class="str">number</span>
+  <span class="prop">target</span>: <span class="str">number</span>                  <span class="cmt">// 2–98</span>
+  <span class="prop">mode</span>: <span class="str">'under' | 'over'</span>
+  <span class="prop">winProbability</span>: <span class="str">number</span>           <span class="cmt">// computed from target+mode</span>
+  <span class="prop">multiplier</span>: <span class="str">number</span>               <span class="cmt">// computed from probability</span>
+  <span class="prop">lastResult</span>: {
+    <span class="prop">result</span>: <span class="str">number</span>
+    <span class="prop">win</span>: <span class="str">boolean</span>
+    <span class="prop">payout</span>: <span class="str">number</span>
+    <span class="prop">multiplier</span>: <span class="str">number</span>
+  } | <span class="str">null</span>
+  <span class="prop">isLoading</span>: <span class="str">boolean</span>
+
+  <span class="fn">setTarget</span>: (<span class="prop">n</span>: <span class="str">number</span>) =&gt; <span class="str">void</span>      <span class="cmt">// recalculates prob + mult</span>
+  <span class="fn">setMode</span>: (<span class="prop">m</span>: <span class="str">'under' | 'over'</span>) =&gt; <span class="str">void</span>
+  <span class="fn">setBetAmount</span>: (<span class="prop">n</span>: <span class="str">number</span>) =&gt; <span class="str">void</span>
+  <span class="fn">roll</span>: () =&gt; <span class="fn">Promise</span>&lt;<span class="str">void</span>&gt;
+}</pre>
+
+  <div class="callout">
+    <p>🔑 <strong>Key simplification:</strong> Probability and multiplier are computed client-side in real-time as the player adjusts the slider. The backend independently calculates and validates on each roll. No need for <code>/active</code> or <code>checkActiveGame</code> — every roll is stateless.</p>
+  </div>
+
+  <!-- §8 INTEGRATION CHECKLIST -->
+  <h2><span class="h2n">§8.</span> Integration Checklist</h2>
+
+  <table>
+    <tr><th>#</th><th>Task</th><th>Files</th></tr>
+    <tr><td>1</td><td>Create types</td><td>src/types/dice.types.ts</td></tr>
+    <tr><td>2</td><td>Add constants</td><td>src/types/constants.ts (DICE_HOUSE_EDGE, DICE_MIN/MAX_TARGET)</td></tr>
+    <tr><td>3</td><td>Build engine</td><td>dice.engine.ts — probability, multiplier, RNG roll</td></tr>
+    <tr><td>4</td><td>Build service</td><td>dice.service.ts — single roll() function (atomic)</td></tr>
+    <tr><td>5</td><td>Build routes</td><td>dice.routes.ts — POST /roll, GET /history</td></tr>
+    <tr><td>6</td><td>Build model</td><td>dice.model.ts — DiceRound schema</td></tr>
+    <tr><td>7</td><td>Register in app.ts</td><td>app.register(diceRoutes, { prefix: '/api/v1/games/dice' })</td></tr>
+    <tr><td>8</td><td>FE: API layer</td><td>src/api/dice.ts — roll(), getHistory()</td></tr>
+    <tr><td>9</td><td>FE: Store</td><td>src/stores/useDiceStore.ts — simple, no session</td></tr>
+    <tr><td>10</td><td>FE: Components</td><td>DiceResult, DiceBar, DiceControls, dice.css</td></tr>
+    <tr><td>11</td><td>FE: Page</td><td>src/pages/DiceGame.tsx</td></tr>
+    <tr><td>12</td><td>FE: Router</td><td>Add route /game/dice in App.tsx</td></tr>
+    <tr><td>13</td><td>FE: Lobby</td><td>Mark Dice as "Live" in Lobby.tsx</td></tr>
+  </table>
+
+  <div class="callout">
+    <p>⚡ <strong>Simplest game to integrate:</strong> No sessions, no game resume, no multi-round state, no cashout. Single POST → single result. Estimated: ~50% less code than Mines or HiLo.</p>
+  </div>
+
+  <div style="margin-top:80px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.05);text-align:center;color:#4a5568;font-size:12px">
+    TON Casino — Dice Game Complete Documentation — v1.0.0 — March 2026
+  </div>
+</div>
+</body>
+</html>
