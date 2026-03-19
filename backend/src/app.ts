@@ -29,6 +29,30 @@ export async function buildApp() {
   // --- WebSocket route ---
   await registerWebSocketRoute(app);
 
+  // --- TON Connect manifest ---
+  app.get('/tonconnect-manifest.json', async (_request, reply) => {
+    reply.header('Content-Type', 'application/json');
+    reply.header('Access-Control-Allow-Origin', '*');
+    return {
+      url: 'https://telegrame-games.onrender.com',
+      name: 'Mini Games Casino',
+      iconUrl: 'https://telegrame-games.onrender.com/icon.png',
+    };
+  });
+
+  // --- App icon (for TON Connect) ---
+  app.get('/icon.png', async (_request, reply) => {
+    // Minimal 1x1 purple PNG placeholder — replace with a real icon later
+    const buf = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+      'base64',
+    );
+    reply.header('Content-Type', 'image/png');
+    reply.header('Access-Control-Allow-Origin', '*');
+    reply.header('Cache-Control', 'public, max-age=86400');
+    return reply.send(buf);
+  });
+
   // --- Health check (enhanced) ---
   app.get('/health', async () => {
     return {

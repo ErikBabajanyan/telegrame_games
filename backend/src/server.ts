@@ -24,11 +24,8 @@ async function start() {
   startLuckWorker();
   startMongoRetryWorker();
 
-  // Note: withdrawal.worker.ts runs as a separate process in production
-  // In development, you can import it here to start inline:
-  if (config.NODE_ENV === 'development') {
-    await import('./workers/withdrawal.worker.js');
-  }
+  // Start withdrawal worker inline
+  await import('./workers/withdrawal.worker.js');
 
   // 4. Start listening
   await app.listen({ port: config.PORT, host: '0.0.0.0' });

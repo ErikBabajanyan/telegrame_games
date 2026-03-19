@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
 import { formatTon, formatMultiplier } from '../../utils/formatTon';
 import './games.css';

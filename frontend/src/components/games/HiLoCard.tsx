@@ -23,7 +23,7 @@ function valueName(v: number): string {
   return String(v);
 }
 
-export function HiLoCard({ card, isRevealing, lastResult }: HiLoCardProps) {
+export function HiLoCard({ card, lastResult }: HiLoCardProps) {
   if (!card) {
     return (
       <div className="hilo-card hilo-card-placeholder">

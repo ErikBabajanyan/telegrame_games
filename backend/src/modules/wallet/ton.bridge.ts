@@ -5,11 +5,6 @@ import type { DepositVerification, WithdrawalResult } from '../../types/wallet.t
 export async function verifyDepositTransaction(txHash: string): Promise<DepositVerification> {
   logger.debug({ txHash }, 'Verifying deposit transaction on-chain');
 
-  if (config.NODE_ENV === 'development') {
-    logger.warn('Using stubbed TON deposit verification (development mode)');
-    return { valid: true, amount: 1_000_000_000, fromAddress: 'EQStubAddress', userId: null };
-  }
-
   try {
     const response = await fetch(
       `https://toncenter.com/api/v2/getTransactions?hash=${txHash}`,
@@ -40,12 +35,19 @@ export async function verifyDepositTransaction(txHash: string): Promise<DepositV
 export async function sendWithdrawal(toAddress: string, amountNano: number): Promise<WithdrawalResult> {
   logger.info({ toAddress, amountNano }, 'Sending withdrawal transaction');
 
-  if (config.NODE_ENV === 'development') {
-    logger.warn('Using stubbed TON withdrawal (development mode)');
-    return { success: true, txHash: `dev_tx_${Date.now()}_${Math.random().toString(36).slice(2, 10)}` };
-  }
-
   try {
+    // TODO: Implement real TON withdrawal using your wallet's secret key
+    // This requires @ton/ton or similar SDK to sign and send the transaction
+    // from your escrow wallet to the user's address.
+    //
+    // Example with @ton/ton:
+    // const client = new TonClient({ endpoint: 'https://toncenter.com/api/v2/jsonRPC', apiKey: config.TON_API_KEY });
+    // const wallet = WalletContractV4.create({ publicKey: ... });
+    // const transfer = wallet.createTransfer({ ... });
+    // await client.sendExternalMessage(wallet, transfer);
+    // return { success: true, txHash: '...' };
+
+    logger.error('sendWithdrawal not yet implemented — requires escrow wallet signing key');
     return { success: false, txHash: null };
   } catch (error) {
     logger.error(error, 'Failed to send withdrawal transaction');
@@ -54,8 +56,6 @@ export async function sendWithdrawal(toAddress: string, amountNano: number): Pro
 }
 
 export async function getEscrowBalance(): Promise<number> {
-  if (config.NODE_ENV === 'development') return 999_000_000_000;
-
   try {
     const response = await fetch(
       `https://toncenter.com/api/v2/getAddressBalance?address=${config.ESCROW_CONTRACT_ADDRESS}`,

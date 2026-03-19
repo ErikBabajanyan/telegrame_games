@@ -1,8 +1,7 @@
 import type { FastifyInstance } from 'fastify';
-import { telegramAuthSchema, refreshTokenSchema, devAuthSchema } from './auth.schema.js';
-import { authenticateWithTelegram, authenticateDevUser, refreshAccessToken, logout } from './auth.service.js';
+import { telegramAuthSchema, refreshTokenSchema } from './auth.schema.js';
+import { authenticateWithTelegram, refreshAccessToken, logout } from './auth.service.js';
 import { jwtAuthHook } from '../../middleware/authenticate.js';
-import { config } from '../../config.js';
 import { AppError } from '../../types/errors.js';
 
 export async function authRoutes(app: FastifyInstance): Promise<void> {
@@ -22,25 +21,6 @@ export async function authRoutes(app: FastifyInstance): Promise<void> {
       return reply.code(statusCode).send({ error: message });
     }
   });
-
-  /** POST /auth/dev (development only) */
-  if (config.NODE_ENV === 'development') {
-    app.post('/dev', async (request, reply) => {
-      const parsed = devAuthSchema.safeParse(request.body);
-      if (!parsed.success) {
-        return reply.code(400).send({ error: 'Invalid request body', details: parsed.error.flatten() });
-      }
-
-      try {
-        const result = await authenticateDevUser(parsed.data.telegramId, parsed.data.firstName, parsed.data.username);
-        return reply.code(200).send(result);
-      } catch (error) {
-        const statusCode = error instanceof AppError ? error.statusCode : 500;
-        const message = error instanceof Error ? error.message : 'Internal server error';
-        return reply.code(statusCode).send({ error: message });
-      }
-    });
-  }
 
   /** POST /auth/refresh */
   app.post('/refresh', async (request, reply) => {

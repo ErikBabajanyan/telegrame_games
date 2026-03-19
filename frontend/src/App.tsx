@@ -23,20 +23,10 @@ function AppContent() {
 
   // Auto-login via Telegram initData on app open
   useEffect(() => {
-    console.log('[Auth] isInTelegram:', isInTelegram);
-    console.log('[Auth] initData length:', initData.length);
-    console.log('[Auth] isAuthenticated:', isAuthenticated);
-
     if (isAuthenticated) return;
-    if (!initData) {
-      console.warn('[Auth] No initData available — app must be opened inside Telegram');
-      return;
-    }
+    if (!initData) return;
 
-    console.log('[Auth] Sending auth request to backend...');
-    login(initData)
-      .then(() => console.log('[Auth] Login successful'))
-      .catch((err) => console.error('[Auth] Login failed:', err));
+    login(initData).catch(() => {});
   }, [initData, isAuthenticated, login, isInTelegram]);
 
   // Refresh balance on auth

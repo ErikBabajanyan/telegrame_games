@@ -12,7 +12,7 @@ const PING_INTERVAL = 30_000;
 
 export function useWebSocket() {
   const wsRef = useRef<WebSocket | null>(null);
-  const pingRef = useRef<ReturnType<typeof setInterval>>();
+  const pingRef = useRef<ReturnType<typeof setInterval>>(undefined);
   const setBalance = useWalletStore((s) => s.setBalance);
 
   useEffect(() => {

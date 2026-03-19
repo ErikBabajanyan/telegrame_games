@@ -67,47 +67,6 @@ export async function authenticateWithTelegram(initData: string): Promise<AuthRe
 }
 
 /**
- * Dev-only authentication.
- */
-export async function authenticateDevUser(
-  telegramId: number,
-  firstName: string,
-  username?: string,
-): Promise<AuthResult> {
-  if (config.NODE_ENV !== 'development') {
-    throw new ForbiddenError('Dev auth is only available in development mode');
-  }
-
-  const user = await findOrCreateUser({ id: telegramId, firstName, username });
-
-  const payload: JwtPayload = {
-    userId: user._id.toString(),
-    telegramId: user.telegramId,
-    role: user.role,
-  };
-
-  const accessToken = signAccessToken(payload);
-  const refreshToken = signRefreshToken(payload);
-
-  const decoded = verifyToken(refreshToken);
-  await redis.set(`refresh:${decoded.jti}`, user._id.toString(), 'EX', config.REFRESH_TOKEN_TTL);
-
-  logger.info({ telegramId, mode: 'dev' }, 'Dev user authenticated');
-
-  return {
-    accessToken,
-    refreshToken,
-    user: {
-      id: user._id.toString(),
-      telegramId: user.telegramId,
-      username: user.username,
-      firstName: user.firstName,
-      role: user.role,
-    },
-  };
-}
-
-/**
  * Refresh access token — rotates refresh token on use.
  */
 export async function refreshAccessToken(refreshTokenStr: string): Promise<AuthTokens> {

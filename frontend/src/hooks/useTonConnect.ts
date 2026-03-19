@@ -1,40 +1,49 @@
 import { useCallback } from 'react';
+import { useTonConnectUI, useTonAddress, useTonWallet } from '@tonconnect/ui-react';
 import { useWalletStore } from '../stores/useWalletStore';
 
-/**
- * TON Connect hook.
- * In production, this wraps @tonconnect/ui-react's useTonConnectUI().
- * For dev/testing, provides mock connect/disconnect.
- */
+const ESCROW_CONTRACT_ADDRESS = import.meta.env.VITE_ESCROW_CONTRACT_ADDRESS as string;
+
 export function useTonConnect() {
-  const { isConnected, address, walletName, setConnected, disconnect } = useWalletStore();
+  const [tonConnectUI] = useTonConnectUI();
+  const friendlyAddress = useTonAddress(true);
+  const wallet = useTonWallet();
+  const { setConnected, disconnect: storeDisconnect } = useWalletStore();
+
+  const isConnected = !!wallet;
+  const address = friendlyAddress || null;
+  const walletName = wallet?.device?.appName || null;
+
+  // Sync wallet state to store when connected
+  if (isConnected && address && walletName) {
+    setConnected(address, walletName);
+  }
 
   const connect = useCallback(async () => {
-    // TODO: Replace with real TON Connect UI
-    // const tonConnectUI = new TonConnectUI({
-    //   manifestUrl: 'https://toncasino.app/tonconnect-manifest.json',
-    // });
-    // const wallet = await tonConnectUI.connectWallet();
+    await tonConnectUI.openModal();
+  }, [tonConnectUI]);
 
-    // Dev stub: simulate connection
-    const mockAddress = 'EQA' + Math.random().toString(36).slice(2, 10) + '...xyz';
-    setConnected(mockAddress, 'Tonkeeper');
-  }, [setConnected]);
+  const disconnect = useCallback(async () => {
+    await tonConnectUI.disconnect();
+    storeDisconnect();
+  }, [tonConnectUI, storeDisconnect]);
 
   const sendDeposit = useCallback(async (amountNano: number) => {
-    // TODO: Replace with real TON Connect sendTransaction
-    // await tonConnectUI.sendTransaction({
-    //   validUntil: Math.floor(Date.now() / 1000) + 600,
-    //   messages: [{
-    //     address: ESCROW_CONTRACT_ADDRESS,
-    //     amount: amountNano.toString(),
-    //     payload: buildDepositPayload(userId),
-    //   }],
-    // });
+    if (!ESCROW_CONTRACT_ADDRESS) {
+      throw new Error('Escrow contract address is not configured');
+    }
 
-    // Dev stub: return mock tx hash
-    return `tx_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-  }, []);
+    const result = await tonConnectUI.sendTransaction({
+      validUntil: Math.floor(Date.now() / 1000) + 600,
+      messages: [{
+        address: ESCROW_CONTRACT_ADDRESS,
+        amount: amountNano.toString(),
+      }],
+    });
+
+    // The boc (bag of cells) serves as the transaction identifier
+    return result.boc;
+  }, [tonConnectUI]);
 
   return {
     isConnected,

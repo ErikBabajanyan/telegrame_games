@@ -22,7 +22,6 @@ export function useMinesGame() {
   }, [store.startGame]);
 
   const handleRevealCell = useCallback(async (index: number) => {
-    const prevStatus = store.status;
     await store.revealCell(index);
 
     // Check result after reveal

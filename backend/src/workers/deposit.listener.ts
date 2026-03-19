@@ -30,8 +30,6 @@ export function stopDepositListener(): void {
 }
 
 async function checkForDeposits(): Promise<void> {
-  if (config.NODE_ENV === 'development') return;
-
   try {
     const response = await fetch(
       `https://toncenter.com/api/v2/getTransactions?address=${config.ESCROW_CONTRACT_ADDRESS}&limit=20`,
